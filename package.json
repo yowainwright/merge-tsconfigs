@@ -19,7 +19,7 @@
     "dist"
   ],
   "scripts": {
-     "build": "tsup src/index.ts --format esm,cjs --dts",
+    "build": "tsup src/index.ts --format esm,cjs --dts",
     "clean": "rimraf dist",
     "commit": "git-cz",
     "commit-msg": "commitlint --edit $1",
@@ -33,8 +33,11 @@
     "update": "codependence --update"
   },
   "dependencies": {
+    "@types/fs-extra": "^11.0.1",
     "commander": "^9.5.0",
+    "cosmiconfig": "^8.0.0",
     "fast-glob": "^3.2.12",
+    "fs-extra": "^11.1.0",
     "tslib": "^2.4.1"
   },
   "devDependencies": {
