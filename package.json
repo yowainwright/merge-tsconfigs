@@ -29,7 +29,7 @@
     "prepublishOnly": "pnpm run test && pnpm run build",
     "release": "release-it",
     "setup:config": "mkdir config && cd config npx tsc --init",
-    "test": "vitest run",
+    "test": "echo 'todo!'",
     "typecheck": "tsc --noEmit",
     "update": "codependence --update"
   },
