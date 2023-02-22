@@ -1,12 +1,17 @@
 #!/usr/bin/env node
-import { program } from 'commander'
+import { program, Option } from 'commander'
 import { logger, script } from './scripts'
 import { Options } from './interfaces'
-import { CompilerOptions } from 'typescript'
+import { defaultTsconfig } from './config'
 
+
+/**
+ * action
+ * @description run the scripts
+ * @param Options
+ * @returns  void
+ */
 export async function action({ isTestingCLI, ...options }: Options = {}): Promise<void> {
-  const compilerOptionsEnum = keys<CompilerOptions>();
-  console.log({ compilerOptionsEnum })
   // capture/test CLI options
   if (isTestingCLI) {
     console.info({ options })
@@ -20,6 +25,9 @@ export async function action({ isTestingCLI, ...options }: Options = {}): Promis
   }
 }
 
+/**
+ * @description add initial program options
+ */
 program.name('merge-tsconfigs')
   .description(
     'Codependency, for code dependency. Checks `coDependencies` in package.json files to ensure dependencies are up-to-date',
@@ -27,6 +35,30 @@ program.name('merge-tsconfigs')
   .argument('[files...]', 'files to check')
   .option('-t, --isTestingCLI', 'enable CLI only testing')
   .option('--isTesting', 'enable running fn tests w/o overwriting')
+  .option('-i, --include [include...]', 'files to include')
+  .option('-e, --exclude [exclude...]', 'files to exclude')
+
+/**
+ * @description add dynamic program options for tsconfig.compilerOptions
+ * TODO this data should be pulled from typescript dynamically
+ */
+Object.keys(defaultTsconfig.compilerOptions)
+  .map((item, i) => ({ name: [item], value: item[i] }))
+  .forEach(({ name, value }) => {
+    if (value === 'string' || value === 'boolean') {
+      program.addOption(new Option(`--${name} <${value}>`, `tsconfig.compilerOptions.${name}`))
+    } else if (value === 'array') {
+      program.addOption(new Option(`--${name} [${value}...]`, `tsconfig.compilerOptions.${name}`))
+    } else if (value === 'object') {
+      console.info('object params are not supported. Reach ou to the maintainer to implement this feature.')
+    }
+  })
+
+
+/**
+ * @description add program action and parse its args
+ */
+program
   .action(action)
   .parse(process.argv)
 

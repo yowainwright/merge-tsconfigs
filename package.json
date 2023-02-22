@@ -35,6 +35,7 @@
     "update": "codependence --update"
   },
   "dependencies": {
+    "@tsconfig/recommended": "^1.0.2",
     "@types/fs-extra": "^11.0.1",
     "@typescript/sandbox": "^0.1.0",
     "commander": "^9.5.0",
