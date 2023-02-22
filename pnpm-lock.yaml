@@ -9,6 +9,7 @@ specifiers:
   '@types/ramda': ^0.28.23
   '@typescript-eslint/eslint-plugin': ^5.48.1
   '@typescript-eslint/parser': ^5.48.1
+  '@typescript/sandbox': ^0.1.0
   codependence: ^0.2.6
   commander: ^9.5.0
   cosmiconfig: ^8.0.0
@@ -38,6 +39,7 @@ specifiers:
 
 dependencies:
   '@types/fs-extra': 11.0.1
+  '@typescript/sandbox': 0.1.0_typescript@4.9.4
   commander: 9.5.0
   cosmiconfig: 8.0.0
   fast-glob: 3.2.12
@@ -713,6 +715,32 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
+  /@typescript/ata/0.9.3_typescript@4.9.4:
+    resolution: {integrity: sha512-/mETZakA5iOT8j8N8/ZUPLEsvSgMJz+cWt9Le1Q9dEwRXwDzekKXw3tpgrq77gaSxgE/Mn/nvtx8uzS41CmZKQ==}
+    peerDependencies:
+      typescript: ^4.4.4
+    dependencies:
+      typescript: 4.9.4
+    dev: false
+
+  /@typescript/sandbox/0.1.0_typescript@4.9.4:
+    resolution: {integrity: sha512-f2pUCF3aNk3cdOuL0M7k8Vgzl4/P3ltgoZ5QWILqwp8Fb3SqLPKFSlTIKmn7Y8B7ojSz0tNQsZwH1syN6gAoSw==}
+    dependencies:
+      '@typescript/ata': 0.9.3_typescript@4.9.4
+      '@typescript/vfs': 1.3.5
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+    dev: false
+
+  /@typescript/vfs/1.3.5:
+    resolution: {integrity: sha512-pI8Saqjupf9MfLw7w2+og+fmb0fZS0J6vsKXXrp4/PDXEFvntgzXmChCXC/KefZZS0YGS6AT8e0hGAJcTsdJlg==}
+    dependencies:
+      debug: 4.3.4
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
   /JSONStream/1.3.5:
     resolution: {integrity: sha512-E+iruNOY8VV9s4JEbe1aNEm6MiszPRr/UfcHMz0TQh1BXSxHK+ASV1R6W4HpjBhSeS+54PIsAMCBmwD06LLsqQ==}
     hasBin: true
@@ -1344,7 +1372,6 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.2
-    dev: true
 
   /decamelize-keys/1.1.1:
     resolution: {integrity: sha512-WiPxgEirIV0/eIOMcnFBA3/IJZAZqKnwAwWyvvdi4lsr1WCN22nhdf/3db3DoZcUjTV2SqfzIwNyp6y2xs3nmg==}
@@ -3212,7 +3239,6 @@ packages:
 
   /ms/2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
-    dev: true
 
   /mute-stream/0.0.8:
     resolution: {integrity: sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==}
