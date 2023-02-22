@@ -1,9 +1,9 @@
 // TODO add compilerOptions
-// import { CompilerOptions } from 'typescript'
-// import { createTypeScriptSandbox } from '@typescript/sandbox';
+import { CompilerOptions } from 'typescript'
 import { readFileSync } from 'fs'
 import gradient from 'gradient-string'
 import { LoggerParams, ConfigOptions, TsConfig } from './interfaces';
+import console from 'console';
 
 /**
  * logger
@@ -64,6 +64,7 @@ export function resolveJSON(
  * @returns {tsconfig} object
  */
 export const mergeConfigContent = (tsconfigs: string[], debug = false) => tsconfigs.reduce((acc: TsConfig = {}, tsconfig: string) => {
+
   let tsconfigJSON = resolveJSON(tsconfig, true)
   if (tsconfigJSON?.extends) {
     const parentTsconfig = resolveJSON(tsconfigJSON.extends as string, true)
@@ -79,6 +80,7 @@ export const mergeConfigContent = (tsconfigs: string[], debug = false) => tsconf
     if (debug) logger({ isDebugging: debug })("error")("mergeConfigContent")("There was an error:")(tsconfigJSON);
     return acc
   }
+  console.log({ CompilerOptions: tsconfigJSON.compilerOptions });
   return {
     ...acc,
     ...tsconfigJSON

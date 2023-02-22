@@ -21,6 +21,7 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "clean": "rimraf dist config",
+    "cmd:test": "ts-node src/program.ts --isTestingCLI",
     "commit": "git-cz",
     "commit-msg": "commitlint --edit $1",
     "lint": "eslint src --ext .ts",

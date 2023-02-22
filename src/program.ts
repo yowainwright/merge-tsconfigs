@@ -2,9 +2,11 @@
 import { program } from 'commander'
 import { logger, script } from './scripts'
 import { Options } from './interfaces'
+import { CompilerOptions } from 'typescript'
 
 export async function action({ isTestingCLI, ...options }: Options = {}): Promise<void> {
-
+  const compilerOptionsEnum = keys<CompilerOptions>();
+  console.log({ compilerOptionsEnum })
   // capture/test CLI options
   if (isTestingCLI) {
     console.info({ options })
@@ -25,5 +27,7 @@ program.name('merge-tsconfigs')
   .argument('[files...]', 'files to check')
   .option('-t, --isTestingCLI', 'enable CLI only testing')
   .option('--isTesting', 'enable running fn tests w/o overwriting')
+  .action(action)
+  .parse(process.argv)
 
 export default program
