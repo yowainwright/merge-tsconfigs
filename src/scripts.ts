@@ -1,5 +1,3 @@
-// TODO add compilerOptions
-import { CompilerOptions } from 'typescript'
 import { readFileSync } from 'fs'
 import gradient from 'gradient-string'
 import { LoggerParams, ConfigOptions, TsConfig } from './interfaces';
@@ -73,17 +71,16 @@ export const mergeConfigContent = (tsconfigs: string[], debug = false) => tsconf
     }
     tsconfigJSON = {
       ...parentTsconfig,
-      ...tsconfigJSON
+      ...tsconfigJSON,
     }
   }
   if (!tsconfigJSON) {
     if (debug) logger({ isDebugging: debug })("error")("mergeConfigContent")("There was an error:")(tsconfigJSON);
     return acc
   }
-  console.log({ CompilerOptions: tsconfigJSON.compilerOptions });
   return {
     ...acc,
-    ...tsconfigJSON
+    ...tsconfigJSON,
   }
 }, {})
 
@@ -98,8 +95,7 @@ export const mergeConfigContent = (tsconfigs: string[], debug = false) => tsconf
  */
 export const mergeTsConfigs = ({
   tsconfigs = [],
-  // TODO compilerOptions,
-  // TODO isTesting,
+  compilerOptions = {},
   debug = false,
 }: ConfigOptions) => {
   if (tsconfigs.length === 0) {
@@ -110,7 +106,7 @@ export const mergeTsConfigs = ({
   if (debug) logger({ isDebugging: debug })("debug")("mergeTsConfig")("Updated tsconfig:")(updatedTsconfig);
   return {
     ...updatedTsconfig,
-    // TODO compilerOptions
+    ...compilerOptions,
   }
 }
 
