@@ -1,9 +1,9 @@
 import { CompilerOptions } from 'typescript';
-import { O } from 'ts-toolbelt';
+import { PartialDeep } from 'type-fest';
 
 export interface ConfigOptions {
   tsconfigs?: string[];
-  compilerOptions?: O.Partial<CompilerOptions>;
+  compilerOptions?: PartialDeep<CompilerOptions>;
   debug?: boolean;
 }
 export interface CompilerOption {
