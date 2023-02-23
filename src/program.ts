@@ -11,16 +11,16 @@ import { defaultTsconfig } from './config'
  * @param Options
  * @returns  void
  */
-export async function action(options: Options = {}): Promise<void> {
+export async function action(files: string[], options: Options = {}): Promise<void> {
   // capture/test CLI options
-  const { debug = false, isTesting = false, isTestingCLI = false, tsconfigs, ...compilerOptions } = options
+  const { debug = false, isTesting = false, isTestingCLI = false, ...compilerOptions } = options
   if (isTestingCLI) {
-    console.info({ options })
+    console.info({ files })
     return
   }
 
   try {
-    await script({ debug, tsconfigs, compilerOptions })
+    await script({ debug, tsconfigs: files, compilerOptions })
   } catch (err) {
     logger({ isDebugging: options.debug })('error')('action')('There was an error:')(err as unknown)
   }

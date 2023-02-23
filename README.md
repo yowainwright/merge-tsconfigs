@@ -1,13 +1,11 @@
-# Merge Tsconfig
+# Merge Tsconfigs
 
-A CLI and node scripts to merge 2 or more tsconfig files
+Merge tsconfigs is an efficiency CLI and node tool for merging tsconfig files.
+It additionally supports overriding merged tsconfigs with `compilerOptions`.
+
+## Why do I want this?
+
+
+## How do I use this?
 
 ## Development
-
-Build
-
-```
-docker build -t merge-tsconfig .
-```
-
-Test

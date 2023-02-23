@@ -29,7 +29,7 @@
     "prepublishOnly": "pnpm run test && pnpm run build",
     "release": "release-it",
     "setup:config": "mkdir config && cd config npx tsc --init",
-    "test": "echo 'todo!'",
+    "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "update": "codependence --update"
   },
@@ -43,8 +43,8 @@
   "devDependencies": {
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
-    "@types/gradient-string": "^1.1.2",
     "@types/fs-extra": "^11.0.1",
+    "@types/gradient-string": "^1.1.2",
     "@types/node": "^18.11.18",
     "@typescript-eslint/eslint-plugin": "^5.48.1",
     "@typescript-eslint/parser": "^5.48.1",
@@ -57,11 +57,12 @@
     "release-it": "^15.6.0",
     "rimraf": "^3.0.2",
     "stdouttojson": "^0.7.1",
-    "tslib": "^2.4.1",
     "ts-node": "^10.9.1",
+    "tslib": "^2.4.1",
     "tsup": "^6.5.0",
     "type-fest": "^3.6.0",
-    "typescript": "^4.9.4"
+    "typescript": "^4.9.4",
+    "vitest": "^0.28.5"
   },
   "commitlint": {
     "extends": [
@@ -75,7 +76,7 @@
   },
   "release-it": {
     "git": {
-      "commitMessage": "chore: release v%s"
+      "commitMessage": "chore: release v$npm_package_version"
     }
   },
   "engines": {
