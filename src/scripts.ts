@@ -1,7 +1,6 @@
 import { readFileSync } from 'fs'
 import gradient from 'gradient-string'
 import { LoggerParams, ConfigOptions, TsConfig } from './interfaces';
-import console from 'console';
 
 /**
  * logger
