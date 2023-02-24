@@ -35,15 +35,11 @@
     "update": "codependence --update"
   },
   "dependencies": {
-    "commander": "^9.5.0",
-    "cosmiconfig": "^8.0.0",
-    "fast-glob": "^3.2.12",
-    "gradient-string": "^2.0.2"
+    "commander": "^9.5.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
-    "@types/gradient-string": "^1.1.2",
     "@types/node": "^18.11.18",
     "@typescript-eslint/eslint-plugin": "^5.48.1",
     "@typescript-eslint/parser": "^5.48.1",
