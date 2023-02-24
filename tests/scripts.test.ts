@@ -44,3 +44,24 @@ test('mergeConfigContent deeply extend the parent', () => {
     }
   });
 });
+
+test('mergeConfigs', () => {
+  const json = mergeTsConfigs({ tsconfigs: ['./tests/cfg1.json', './tests/cfg2.json'], isTesting: true });
+  expect(json).toEqual({
+    "compilerOptions": {
+      "target": "commonjs",
+      "allowJS": true,
+    },
+    "exclude": [],
+    "include": [],
+  });
+})
+
+test('writeTsconfig', () => {
+  const json = writeTsconfig({ compilerOptions: { target: 'esnext' as keyof unknown } }, './tmp/tsconfig.json', true);
+  expect(json).toEqual({
+    "compilerOptions": {
+      "target": "esnext",
+    },
+  });
+});

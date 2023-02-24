@@ -39,6 +39,7 @@ program.name('merge-tsconfigs')
   .option('-i, --include [include...]', 'files to include, matches a glob or array pattern')
   .option('--isTesting', 'enable testing')
   .option('-o, --out <file>', 'output file, otherwise, the file will be written to tsconfig.merged.json')
+  .option('--isTesting', 'enable testing')
   .option('-t, --isTestingCLI', 'enable CLI only testing')
 
 /**
