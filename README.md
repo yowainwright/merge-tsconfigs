@@ -1,5 +1,11 @@
 # Merge-Tsconfigs
 
+![Typed with TypeScript](https://flat.badgen.net/badge/icon/Typed?icon=typescript&label&labelColor=blue&color=555555)
+[![npm version](https://badge.fury.io/js/merge-tsconfigs.svg)](https://badge.fury.io/js/merge-tsconfigs)
+![ci](https://github.com/yowainwright/merge-tsconfigs/actions/workflows/ci.yml/badge.svg)
+[![Github](https://badgen.net/badge/icon/github?icon=github&label&color=grey)](https://github.com/yowainwright/merge-tsconfigs)
+![Twitter](https://img.shields.io/twitter/url?url=https%3A%2F%2Fgithub.com%2Fyowainwright%2Fmerge-tsconfigs)
+
 _Merge-tsconfigs_ is a CLI and node tool for merging tsconfig files into the exact tsconfig file you want. 💪
 
 ---
