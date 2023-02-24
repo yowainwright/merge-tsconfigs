@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "target": "esnext"
+  },
+  "extends": "./cfg3.json"
+}
