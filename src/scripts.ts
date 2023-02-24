@@ -1,5 +1,5 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'fs'
-import { dirname } from 'path'
+import { dirname, join, resolve } from 'path'
 import { LoggerParams, ConfigOptions, TsConfig } from './interfaces';
 
 /**
@@ -47,6 +47,7 @@ export function resolveJSON(
     const json = JSON.parse(readFileSync(path, "utf8"));
     return json;
   } catch (err) {
+    console.log({ err });
     if (debug)
       logger({ isDebugging: debug })("error")("resolveJSON")("There was an error:")(err as unknown);
     return {} as TsConfig;
@@ -61,16 +62,18 @@ export function resolveJSON(
  * @returns {tsconfig} object
  */
 export const mergeConfigContent = (tsconfigs: string[], debug = false) => tsconfigs.reduce((acc: TsConfig = {}, tsconfig: string) => {
-
-  let tsconfigJSON = resolveJSON(tsconfig, true)
-  if (tsconfigJSON?.extends) {
-    const parentTsconfig = resolveJSON(tsconfigJSON.extends as string, true)
+  let tsconfigJSON = resolveJSON(tsconfig, debug)
+  const parentPath = tsconfigJSON?.extends
+  if (parentPath) {
+    const relativeParentPath = join(dirname(tsconfig), parentPath)
+    const parentTsconfig = resolveJSON(relativeParentPath, debug)
     if (parentTsconfig?.extends) {
-      logger({ isDebugging: false })("error")("mergeConfigContent")("Parent tsconfig:merge-tsconfigs only handles extending from a parent, consider extending tsconfigs less.")(parentTsconfig)
+      logger({ isDebugging: debug })("error")("mergeConfigContent")("Parent tsconfig:merge-tsconfigs only handles extending from a parent, consider extending tsconfigs less.")(parentTsconfig)
     }
+    const { extends: _, ...tsconfigWithoutExtends } = tsconfigJSON
     tsconfigJSON = {
       ...parentTsconfig,
-      ...tsconfigJSON,
+      ...tsconfigWithoutExtends,
     }
   }
   if (!tsconfigJSON) {
