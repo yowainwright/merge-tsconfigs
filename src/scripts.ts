@@ -74,6 +74,10 @@ export const mergeConfigContent = (tsconfigs: string[], debug = false) => tsconf
     tsconfigJSON = {
       ...parentTsconfig,
       ...tsconfigWithoutExtends,
+      compilerOptions: {
+        ...parentTsconfig?.compilerOptions,
+        ...tsconfigWithoutExtends?.compilerOptions,
+      }
     }
   }
   if (!tsconfigJSON) {
@@ -83,6 +87,10 @@ export const mergeConfigContent = (tsconfigs: string[], debug = false) => tsconf
   return {
     ...acc,
     ...tsconfigJSON,
+    compilerOptions: {
+      ...acc?.compilerOptions,
+      ...tsconfigJSON?.compilerOptions,
+    }
   }
 }, {})
 
