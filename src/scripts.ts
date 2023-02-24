@@ -102,7 +102,8 @@ export const mergeConfigContent = (tsconfigs: string[], debug = false) => tsconf
  * @returns {tsconfig} object
  * @
  */
-export const writeTsconfig = (tsconfig: TsConfig, out: string) => {
+export const writeTsconfig = (tsconfig: TsConfig, out: string, isTesting: boolean) => {
+  if (isTesting) return tsconfig
   const path = out.length ? out : './tsconfig.merged.json'
   mkdirSync(dirname(path), { recursive: true })
   writeFileSync(path, JSON.stringify(tsconfig, null, 2))
@@ -125,6 +126,7 @@ export const mergeTsConfigs = ({
   compilerOptions = {},
   debug = false,
   out = '',
+  isTesting = false,
 }: ConfigOptions) => {
   if (tsconfigs.length === 0) {
     if (debug) logger({ isDebugging: debug })("error")("mergeTsConfig")("No tsconfig files were provided.")(null);
@@ -138,7 +140,7 @@ export const mergeTsConfigs = ({
     include: [...updatedTsconfig.include || [], ...include],
     ...compilerOptions,
   }
-  return writeTsconfig(tsconfig, out)
+  return writeTsconfig(tsconfig, out, isTesting)
 }
 
 export const script = mergeTsConfigs
