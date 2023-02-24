@@ -25,11 +25,22 @@ test('resolveJSON', () => {
   });
 });
 
-test('mergeConfigContent for override sibling', () => {
+test('mergeConfigContent to override sibling', () => {
   const json = mergeConfigContent(['./tests/cfg1.json', './tests/cfg2.json']);
   expect(json).toEqual({
     "compilerOptions": {
       "target": "commonjs",
+      "allowJS": true,
+    }
+  });
+});
+
+test('mergeConfigContent deeply extend the parent', () => {
+  const json = mergeConfigContent(['./tests/cfg4.json', './tests/cfg2.json']);
+  expect(json).toEqual({
+    "compilerOptions": {
+      "target": "commonjs",
+      "rootDir": "src",
     }
   });
 });
