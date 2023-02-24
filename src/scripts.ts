@@ -1,5 +1,4 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'fs'
-import gradient from 'gradient-string'
 import { dirname } from 'path'
 import { LoggerParams, ConfigOptions, TsConfig } from './interfaces';
 
@@ -18,17 +17,17 @@ export const logger = ({ isDebugging = false, emoji = `🛣️`, gap = ` => `, n
     const firstLine = `${name}:${debugMsg}${sectionMsg}`
     const secondLine = message ? `${emoji}${gap}${message}` : ''
     if (type === 'error') {
-      console.error(gradient.passion(firstLine))
+      console.error(firstLine)
       if (secondLine) console.error(secondLine)
       if (err) console.error(err)
     } else if (type === 'debug') {
-      console.debug(gradient.passion(firstLine))
+      console.debug(firstLine)
       if (secondLine) console.debug(secondLine)
     } else if (type === 'info') {
-      console.info(gradient.teen(firstLine))
+      console.info(firstLine)
       if (secondLine) console.info(secondLine)
     } else {
-      console.log(gradient.teen(firstLine))
+      console.log(firstLine)
       if (secondLine) console.log(secondLine)
     }
   }
@@ -110,6 +109,8 @@ export const writeTsconfig = (tsconfig: TsConfig, out: string) => {
  */
 export const mergeTsConfigs = ({
   tsconfigs = [],
+  exclude = [],
+  include = [],
   compilerOptions = {},
   debug = false,
   out = '',
@@ -122,6 +123,8 @@ export const mergeTsConfigs = ({
   if (debug) logger({ isDebugging: debug })("debug")("mergeTsConfig")("Updated tsconfig:")(updatedTsconfig);
   const tsconfig = {
     ...updatedTsconfig,
+    exclude: [...updatedTsconfig.exclude || [], ...exclude],
+    include: [...updatedTsconfig.include || [], ...include],
     ...compilerOptions,
   }
   return writeTsconfig(tsconfig, out)

@@ -6,6 +6,8 @@ export interface ConfigOptions {
   debug?: boolean;
   out?: string;
   tsconfigs?: string[];
+  exclude?: string[];
+  include?: string[];
 }
 export interface CompilerOption {
   name: string;
