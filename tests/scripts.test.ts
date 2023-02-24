@@ -15,9 +15,17 @@ test('logger', () => {
   expect(spy).toHaveBeenCalled();
 })
 
+test('resolveJSON', () => {
+  const json = resolveJSON('./tests/cfg1.json', true);
+  expect(json).toStrictEqual({
+    "compilerOptions": {
+      "target": "esnext",
+    },
+    "extends": "./cfg3.json",
+  });
+});
+
 test('mergeConfigContent for override sibling', () => {
-  vi.clearAllMocks();
-  vi.resetAllMocks();
   const json = mergeConfigContent(['./tests/cfg1.json', './tests/cfg2.json']);
   expect(json).toEqual({
     "compilerOptions": {
