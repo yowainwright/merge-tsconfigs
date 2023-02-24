@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { program, Option } from 'commander'
+import { program } from 'commander'
 import { logger, script } from './scripts'
 import { Options } from './interfaces'
 import { compilerOptions } from './config'
@@ -34,14 +34,15 @@ program.name('merge-tsconfigs')
     'Merge-tsconfigs is a CLI and node tool for merging tsconfig files into the exact tsconfig file you want 🛣️',
   )
   .argument('[files...]', 'files to check, matches an array pattern')
+  .option('-d, --debug', 'enable debugging')
+  .option('-e, --exclude [exclude...]', 'files to exclude, matches a glob or array pattern')
+  .option('-i, --include [include...]', 'files to include, matches a glob or array pattern')
+  .option('--isTesting', 'enable testing')
   .option('-o, --out <file>', 'output file, otherwise, the file will be written to tsconfig.merged.json')
   .option('-t, --isTestingCLI', 'enable CLI only testing')
-  .option('-i, --include [include...]', 'files to include, matches a glob or array pattern')
-  .option('-e, --exclude [exclude...]', 'files to exclude, matches a glob or array pattern')
 
 /**
  * @description add dynamic program options for tsconfig.compilerOptions
- * TODO this data should be pulled from typescript dynamically
  */
 Object.keys(compilerOptions)
   .map((name) => ({ name, value: compilerOptions[name as keyof unknown] }))
@@ -50,8 +51,6 @@ Object.keys(compilerOptions)
       program.option(`--${name} <${value}>`, `tsconfig.compilerOptions.${name}`)
     } else if (value === 'array') {
       program.option(`--${name} [${value}...]`, `tsconfig.compilerOptions.${name}`)
-    } else if (value === 'object') {
-      console.info('object params are not supported. Reach out to the maintainer to implement this feature.')
     }
   })
 

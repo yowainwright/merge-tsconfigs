@@ -1,5 +1,6 @@
-import { readFileSync } from 'fs'
+import { mkdirSync, readFileSync, writeFileSync } from 'fs'
 import gradient from 'gradient-string'
+import { dirname } from 'path'
 import { LoggerParams, ConfigOptions, TsConfig } from './interfaces';
 
 /**
@@ -83,6 +84,21 @@ export const mergeConfigContent = (tsconfigs: string[], debug = false) => tsconf
   }
 }, {})
 
+/**
+ * writeTsconfig
+ * @description writes tsconfig to file
+ * @param {tsconfig} object
+ * @param {out} string
+ * @returns {tsconfig} object
+ * @
+ */
+export const writeTsconfig = (tsconfig: TsConfig, out: string) => {
+  const path = out.length ? out : './tsconfig.merged.json'
+  mkdirSync(dirname(path), { recursive: true })
+  writeFileSync(path, JSON.stringify(tsconfig, null, 2))
+  return tsconfig
+}
+
 
 /**
  * mergeConfigContent
@@ -96,6 +112,7 @@ export const mergeTsConfigs = ({
   tsconfigs = [],
   compilerOptions = {},
   debug = false,
+  out = '',
 }: ConfigOptions) => {
   if (tsconfigs.length === 0) {
     if (debug) logger({ isDebugging: debug })("error")("mergeTsConfig")("No tsconfig files were provided.")(null);
@@ -103,10 +120,11 @@ export const mergeTsConfigs = ({
   }
   const updatedTsconfig = mergeConfigContent(tsconfigs, debug)
   if (debug) logger({ isDebugging: debug })("debug")("mergeTsConfig")("Updated tsconfig:")(updatedTsconfig);
-  return {
+  const tsconfig = {
     ...updatedTsconfig,
     ...compilerOptions,
   }
+  return writeTsconfig(tsconfig, out)
 }
 
 export const script = mergeTsConfigs

@@ -2,9 +2,10 @@ import { CompilerOptions } from 'typescript';
 import { PartialDeep } from 'type-fest';
 
 export interface ConfigOptions {
-  tsconfigs?: string[];
   compilerOptions?: PartialDeep<CompilerOptions>;
   debug?: boolean;
+  out?: string;
+  tsconfigs?: string[];
 }
 export interface CompilerOption {
   name: string;
