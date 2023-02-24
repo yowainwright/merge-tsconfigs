@@ -15,7 +15,7 @@ export async function action(files: string[], options: Options = {}): Promise<vo
   // capture/test CLI options
   const { debug = false, isTesting = false, isTestingCLI = false, ...compilerOptions } = options
   if (isTestingCLI) {
-    console.info({ files })
+    console.info({ files, options })
     return
   }
 
@@ -47,7 +47,9 @@ program.name('merge-tsconfigs')
 Object.keys(compilerOptions)
   .map((name) => ({ name, value: compilerOptions[name as keyof unknown] }))
   .forEach(({ name, value }) => {
-    if (['string', 'boolean'].includes(value)) {
+    if (value === 'boolean') {
+      program.option(`--${name}`, `tsconfig.compilerOptions.${name}`)
+    } else if (value === 'string') {
       program.option(`--${name} <${value}>`, `tsconfig.compilerOptions.${name}`)
     } else if (value === 'array') {
       program.option(`--${name} [${value}...]`, `tsconfig.compilerOptions.${name}`)
