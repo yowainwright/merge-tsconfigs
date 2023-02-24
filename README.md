@@ -128,11 +128,15 @@ const config = mergeTsconfigs({
 
 ---
 
-## How do I install this?
+## How do I start using this?
+
+Install merge-tsconfigs with your preferred package manager.
 
 ```sh
 npm install merge-tsconfigs --save-dev
 ```
+
+\*unpkg and skypack support coming very soon! 🚀
 
 ---
 
