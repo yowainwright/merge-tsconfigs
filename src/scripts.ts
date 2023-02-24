@@ -1,5 +1,5 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'fs'
-import { dirname, join, resolve } from 'path'
+import { dirname, join } from 'path'
 import { LoggerParams, ConfigOptions, TsConfig } from './interfaces';
 
 /**
