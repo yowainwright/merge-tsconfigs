@@ -1,12 +1,12 @@
 # Merge-Tsconfigs
 
-_Merge-tsconfigs_ is a CLI and node tool for merging tsconfig files into the exact tsconfig file you want.
+_Merge-tsconfigs_ is a CLI and node tool for merging tsconfig files into the exact tsconfig file you want. 💪
 
 ---
 
 ## Why do I want this?
 
-Tsconfig files are copied, pasted, or left as out-of-sync widows 😥 throughout projects. _Merge-tsconfigs_ provides a CLI and node functions to merge tsconfigs files and compilerOptions into the single tsconfig file you want at a give time.
+Tsconfig files are copied, pasted, or left as out-of-sync widows 😥 throughout projects. _Merge-tsconfigs_ provides a CLI and node functions to merge tsconfigs files and compilerOptions into _the single tsconfig file you want at a given time_.
 
 For example, if you have a monorepo with multiple packages and you want to deploy one of them with a single tsconfig, you might need to copy a tsconfig from root, or write another static tsconfig just for deployment. Well, with _Merge-tsconfigs_ you can run the CLI to write a temporary tsconfig to be used for deployment.
 
@@ -16,7 +16,9 @@ By providing an easy way to create the tsconfig you want, your everyday tsconfig
 
 ## How do I use this?
 
-Merge-tsconfigs is built to be uses as a CLI first and foremost. It can also exports node functions which can be used as well
+Merge-tsconfigs is built to be uses as a CLI first and foremost. It also exports node functions which can be used to preform the same merge operation.
+
+---
 ### CLI API
 
 Listed below are the CLI options and arguments to execute merge-tsconfigs. To \*_view all_ cli options in your browser, run `merge-tsconfigs --help`!
@@ -75,6 +77,57 @@ merge-tsconfigs ./tsconfig.json ./tsconfig.build.json --out ./tsconfig.out.json 
 
 ---
 
-### Node Api
+### Node API
 
-## Development
+The node API works exactly the same as the CLI API.
+
+```ts
+import mergeTsconfigs from 'merge-tsconfigs';
+
+mergeTsconfigs({
+  files: ['./tsconfig.json', './tsconfig.build.json'],
+  out: './tsconfig.out.json',
+  include: ['src/**.ts'],
+  exclude: ['test/**.ts'],
+  compilerOptions: {
+    allowJs: true,
+    noEmit: true,
+  },
+});
+
+```
+
+You can use any compiler options provided by [Typescript](https://www.typescriptlang.org/docs/handbook/compiler-options.html). Object keys aren't currently implemented but can be upon feature request.
+
+#### Recipes
+
+Merge tsconfig files into a single tsconfig
+
+```ts
+const config = mergeTsconfigs({
+  files: ['./tsconfig.json', './tsconfig.build.json'],
+});
+// => config = { ... }
+```
+
+Merge tsconfig files into a custom output file
+
+```ts
+const config = mergeTsconfigs({
+  files: ['./tsconfig.json', './tsconfig.build.json'],
+  out: './new-dir/tsconfig.out.json',
+});
+// => config = { ... }
+```
+
+---
+
+## How do I install this?
+
+```sh
+npm install merge-tsconfigs --save-dev
+```
+
+---
+
+Made by [@yowainwright](https://github.com/yowainwright), MIT 2023

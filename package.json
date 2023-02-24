@@ -25,7 +25,8 @@
     "commit-msg": "commitlint --edit $1",
     "lint": "eslint src --ext .ts",
     "lint-fix": "pnpm run lint --fix",
-    "pre-commit": "lint-staged --quiet && pnpm run test",
+    "pre-commit": "lint-staged",
+    "prepare": "husky install",
     "prepublishOnly": "pnpm run test && pnpm run build",
     "release": "release-it",
     "setup:config": "mkdir config && cd config npx tsc --init",
@@ -37,13 +38,11 @@
     "commander": "^9.5.0",
     "cosmiconfig": "^8.0.0",
     "fast-glob": "^3.2.12",
-    "fs-extra": "^11.1.0",
     "gradient-string": "^2.0.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.2",
     "@commitlint/config-conventional": "^17.4.2",
-    "@types/fs-extra": "^11.0.1",
     "@types/gradient-string": "^1.1.2",
     "@types/node": "^18.11.18",
     "@typescript-eslint/eslint-plugin": "^5.48.1",
@@ -67,11 +66,43 @@
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
-    ]
+    ],
+    "parserPreset": {
+      "parserOpts": {
+        "issuePrefixes": [
+          "PVCY-"
+        ]
+      }
+    },
+    "rules": {
+      "header-max-length": [
+        2,
+        "always",
+        120
+      ],
+      "references-empty": [
+        1,
+        "never"
+      ],
+      "type-enum": [
+        2,
+        "always",
+        [
+          "chore",
+          "feat",
+          "fix",
+          "docs",
+          "refactor",
+          "revert",
+          "breaking"
+        ]
+      ]
+    }
   },
   "lint-staged": {
     "src/**/*.ts": [
-      "eslint --fix"
+      "eslint --cache --fix",
+      "vitest related --run"
     ]
   },
   "release-it": {
