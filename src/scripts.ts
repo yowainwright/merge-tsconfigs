@@ -61,11 +61,12 @@ export function resolveJSON(
  * @param {debug} boolean
  * @returns {tsconfig} object
  */
-export const mergeConfigContent = (tsconfigs: string[], debug = false) => tsconfigs.reduce((acc: TsConfig = {}, tsconfig: string) => {
-  let tsconfigJSON = resolveJSON(tsconfig, debug)
+export const mergeConfigContent = (tsconfigs: string[], cwd: string, debug = false) => tsconfigs.reduce((acc: TsConfig = {}, tsconfig: string) => {
+  const path = `${cwd}/${tsconfig}`
+  let tsconfigJSON = resolveJSON(path, debug)
   const parentPath = tsconfigJSON?.extends
   if (parentPath) {
-    const relativeParentPath = join(dirname(tsconfig), parentPath)
+    const relativeParentPath = join(dirname(path), parentPath)
     const parentTsconfig = resolveJSON(relativeParentPath, debug)
     if (parentTsconfig?.extends) {
       logger({ isDebugging: debug })("error")("mergeConfigContent")("Parent tsconfig:merge-tsconfigs only handles extending from a parent, consider extending tsconfigs less.")(parentTsconfig)
@@ -102,14 +103,13 @@ export const mergeConfigContent = (tsconfigs: string[], debug = false) => tsconf
  * @returns {tsconfig} object
  * @
  */
-export const writeTsconfig = (tsconfig: TsConfig, out: string, isTesting: boolean) => {
+export const writeTsconfig = (tsconfig: TsConfig, cwd: string, out: string, isTesting: boolean) => {
   if (isTesting) return tsconfig
-  const path = out.length ? out : './tsconfig.merged.json'
+  const path = out.length ? out : `${cwd}/tsconfig.merged.json`
   mkdirSync(dirname(path), { recursive: true })
   writeFileSync(path, JSON.stringify(tsconfig, null, 2))
   return tsconfig
 }
-
 
 /**
  * mergeConfigContent
@@ -121,9 +121,9 @@ export const writeTsconfig = (tsconfig: TsConfig, out: string, isTesting: boolea
  */
 export const mergeTsConfigs = ({
   tsconfigs = [],
-  exclude = [],
-  include = [],
-  compilerOptions = {},
+  exclude,
+  include,
+  compilerOptions,
   debug = false,
   out = '',
   isTesting = false,
@@ -132,15 +132,19 @@ export const mergeTsConfigs = ({
     if (debug) logger({ isDebugging: debug })("error")("mergeTsConfig")("No tsconfig files were provided.")(null);
     return;
   }
-  const updatedTsconfig = mergeConfigContent(tsconfigs, debug)
+  const cwd = process.cwd()
+  const updatedTsconfig = mergeConfigContent(tsconfigs, cwd, debug)
   if (debug) logger({ isDebugging: debug })("debug")("mergeTsConfig")("Updated tsconfig:")(updatedTsconfig);
   const tsconfig = {
     ...updatedTsconfig,
-    exclude: [...updatedTsconfig.exclude || [], ...exclude],
-    include: [...updatedTsconfig.include || [], ...include],
-    ...compilerOptions,
+    ...(exclude ? [...updatedTsconfig?.exclude || [], ...exclude] : updatedTsconfig?.exclude),
+    ...(include ? [...updatedTsconfig.include || [], ...include] : updatedTsconfig?.include),
+    compilerOptions: {
+      ...updatedTsconfig?.compilerOptions,
+      ...compilerOptions,
+    }
   }
-  return writeTsconfig(tsconfig, out, isTesting)
+  return writeTsconfig(tsconfig, cwd, out, isTesting)
 }
 
 export const script = mergeTsConfigs
