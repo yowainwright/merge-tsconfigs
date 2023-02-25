@@ -6,6 +6,7 @@ const {
   mergeConfigContent,
   mergeTsConfigs,
   resolveJSON,
+  updateCompilerOptions,
   writeTsconfig
 } = scripts;
 
@@ -63,3 +64,8 @@ test('writeTsconfig', () => {
     },
   });
 });
+
+test('updateCompilerOptions delete compilerOptions', () => {
+  const json = updateCompilerOptions({ target: 'esnext' as keyof unknown, allowJS: true }, { allowJS: 'delete' });
+  expect(json).toEqual({ target: 'esnext' });
+})

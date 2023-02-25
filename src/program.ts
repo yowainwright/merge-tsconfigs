@@ -54,6 +54,8 @@ Object.keys(compilerOptions)
       program.option(`--${name} <${value}>`, `tsconfig.compilerOptions.${name}`)
     } else if (value === 'array') {
       program.option(`--${name} [${value}...]`, `tsconfig.compilerOptions.${name}`)
+    } else if (value === 'object') {
+      program.option(`--${name} <${value}>`, `tsconfig.compilerOptions.${name}`)
     }
   })
 

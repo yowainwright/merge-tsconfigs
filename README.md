@@ -2,6 +2,8 @@
 
 ![Typed with TypeScript](https://flat.badgen.net/badge/icon/Typed?icon=typescript&label&labelColor=blue&color=555555)
 [![npm version](https://badge.fury.io/js/merge-tsconfigs.svg)](https://badge.fury.io/js/merge-tsconfigs)
+[![unpkg](https://img.shields.io/badge/unpkg-blue.svg)](https://unpkg.com/merge-tsconfigs@0.1.1/dist/index.js)
+[![skypack](https://img.shields.io/badge/skypack-blueviolet.svg)](https://cdn.skypack.dev/merge-tsconfigs?min)
 ![ci](https://github.com/yowainwright/merge-tsconfigs/actions/workflows/ci.yml/badge.svg)
 [![Github](https://badgen.net/badge/icon/github?icon=github&label&color=grey)](https://github.com/yowainwright/merge-tsconfigs)
 ![Twitter](https://img.shields.io/twitter/url?url=https%3A%2F%2Fgithub.com%2Fyowainwright%2Fmerge-tsconfigs)
@@ -10,7 +12,7 @@ _Merge-tsconfigs_ is a CLI and node tool for merging tsconfig files into the exa
 
 ---
 
-**[Why do I want this?](#why-do-i-want-this)** | **[Example](#for-example)** | **[How do I use this?](#how-do-i-use-this)** | **[CLI API](#cli-api)** | **[Node API](#node-api)** | **[Install](#how-do-i-start-using-this)**
+**[Why do I want this?](#why-do-i-want-this)** | **[Example](#for-example)** | **[How do I use this?](#how-do-i-use-this)** | **[CLI API](#cli-api)** | **[Node API](#node-api)** | **[How do I start using this?](#how-do-i-start-using-this)**
 
 ---
 
@@ -175,7 +177,7 @@ Install merge-tsconfigs with your preferred package manager.
 npm install merge-tsconfigs --save-dev
 ```
 
-\*unpkg and skypack support coming very soon! 🚀
+\*[unpkg](https://unpkg.com/merge-tsconfigs@0.1.1/dist/index.js) and [skypack](https://cdn.skypack.dev/merge-tsconfigs?min) support coming very soon! 🚀
 
 ---
 
