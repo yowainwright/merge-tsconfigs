@@ -118,6 +118,7 @@ export const writeTsconfig = (tsconfig: TsConfig, cwd: string, out: string, isTe
  * @param {CompilerOptions} object
  * @param {CompilerOptions} object
  * @returns {CompilerOptions} object
+ * TODO fix type issues below
  */
 export const updateCompilerOptions = (compilerOptions: PartialCompilerOptions = {}, currentCompilerOptions: PartialCompilerOptions): PartialCompilerOptions => {
   const compilerOptionKeys = compilerOptions ? Object.keys(compilerOptions) : []
