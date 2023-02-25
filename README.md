@@ -10,6 +10,10 @@ _Merge-tsconfigs_ is a CLI and node tool for merging tsconfig files into the exa
 
 ---
 
+**[Why do I want this?](#why-do-i-want-this)** | **[Example](#for-example)** | **[How do I use this?](#how-do-i-use-this)** | **[CLI API](#cli-api)** | **[Node API](#node-api)** | **[Install](#how-do-i-start-using-this)**
+
+---
+
 ## Why do I want this?
 
 Tsconfig files are copied, pasted, or left as out-of-sync widows 😥 throughout projects. _Merge-tsconfigs_ provides a CLI and node functions to merge tsconfigs files and compilerOptions into _the single tsconfig file you want at a given time_.
@@ -17,6 +21,41 @@ Tsconfig files are copied, pasted, or left as out-of-sync widows 😥 throughout
 For example, if you have a monorepo with multiple packages and you want to deploy one of them with a single tsconfig, you might need to copy a tsconfig from root, or write another static tsconfig just for deployment. Well, with _Merge-tsconfigs_ you can run the CLI to write a temporary tsconfig to be used for deployment.
 
 By providing an easy way to create the tsconfig you want, your everyday tsconfig code remains the same, your dockerfiles require less context into other directories, and your deployment process is dynamically more exact.
+
+---
+
+### _For example_
+
+By running `merge-tsconfigs ./tsconfig.build.json` you'll merge `tsconfig.json`
+```ts
+{
+  "compilerOptions": {
+    "allowJS": true
+  }
+}
+```
+
+and, `tsconfig.build.json`
+```ts
+{
+  "compilerOptions": {
+    "target": "esnext"
+  },
+  "extends": "./tsconfig.json"
+}
+```
+
+into `tsconfig.merged.json`
+```ts
+{
+  "compilerOptions": {
+    "allowJS": true,
+    "target": "esnext"
+  }
+}
+```
+
+Which you can now use for deployment, dockerfiles, or any other use case. And, you don't have to worry about copying, pasting, or keeping track of multiple tsconfigs! 🎉
 
 ---
 

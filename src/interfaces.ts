@@ -30,7 +30,7 @@ export type LoggerParams = {
 
 export interface TsConfig {
   extends?: string;
-  compilerOptions?: CompilerOptions;
+  compilerOptions?: PartialDeep<CompilerOptions>;
   include?: string[];
   exclude?: string[];
 }

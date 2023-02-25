@@ -26,7 +26,7 @@ test('resolveJSON', () => {
 });
 
 test('mergeConfigContent to override sibling', () => {
-  const json = mergeConfigContent(['./tests/cfg1.json', './tests/cfg2.json']);
+  const json = mergeConfigContent(['./tests/cfg1.json', './tests/cfg2.json'], process.cwd());
   expect(json).toEqual({
     "compilerOptions": {
       "target": "commonjs",
@@ -36,7 +36,7 @@ test('mergeConfigContent to override sibling', () => {
 });
 
 test('mergeConfigContent deeply extend the parent', () => {
-  const json = mergeConfigContent(['./tests/cfg4.json', './tests/cfg2.json']);
+  const json = mergeConfigContent(['./tests/cfg4.json', './tests/cfg2.json'], process.cwd());
   expect(json).toEqual({
     "compilerOptions": {
       "target": "commonjs",
@@ -52,13 +52,11 @@ test('mergeConfigs', () => {
       "target": "commonjs",
       "allowJS": true,
     },
-    "exclude": [],
-    "include": [],
   });
 })
 
 test('writeTsconfig', () => {
-  const json = writeTsconfig({ compilerOptions: { target: 'esnext' as keyof unknown } }, './tmp/tsconfig.json', true);
+  const json = writeTsconfig({ compilerOptions: { target: 'esnext' as keyof unknown } }, process.cwd(), './tmp/tsconfig.json', true);
   expect(json).toEqual({
     "compilerOptions": {
       "target": "esnext",
