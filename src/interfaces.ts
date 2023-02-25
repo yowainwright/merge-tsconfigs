@@ -1,8 +1,14 @@
 import { CompilerOptions } from 'typescript';
 import { PartialDeep } from 'type-fest';
 
+export interface CompilerOptionOverrides {
+  [key: string]: string | boolean | string[] | undefined;
+}
+
+export type PartialCompilerOptions = PartialDeep<CompilerOptions | CompilerOptionOverrides>;
+
 export interface ConfigOptions {
-  compilerOptions?: PartialDeep<CompilerOptions>;
+  compilerOptions?: PartialCompilerOptions;
   debug?: boolean;
   out?: string;
   tsconfigs?: string[];

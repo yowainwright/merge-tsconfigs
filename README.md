@@ -2,6 +2,8 @@
 
 ![Typed with TypeScript](https://flat.badgen.net/badge/icon/Typed?icon=typescript&label&labelColor=blue&color=555555)
 [![npm version](https://badge.fury.io/js/merge-tsconfigs.svg)](https://badge.fury.io/js/merge-tsconfigs)
+[![unpkg](https://img.shields.io/badge/unpkg-blue.svg)](https://unpkg.com/merge-tsconfigs@0.1.1/dist/index.js)
+[![skypack](https://img.shields.io/badge/skypack-blueviolet.svg)](https://cdn.skypack.dev/merge-tsconfigs?min)
 ![ci](https://github.com/yowainwright/merge-tsconfigs/actions/workflows/ci.yml/badge.svg)
 [![Github](https://badgen.net/badge/icon/github?icon=github&label&color=grey)](https://github.com/yowainwright/merge-tsconfigs)
 ![Twitter](https://img.shields.io/twitter/url?url=https%3A%2F%2Fgithub.com%2Fyowainwright%2Fmerge-tsconfigs)
@@ -10,7 +12,7 @@ _Merge-tsconfigs_ is a CLI and node tool for merging tsconfig files into the exa
 
 ---
 
-**[Why do I want this?](#why-do-i-want-this)** | **[Example](#for-example)** | **[How do I use this?](#how-do-i-use-this)** | **[CLI API](#cli-api)** | **[Node API](#node-api)** | **[Install](#how-do-i-start-using-this)**
+**[Why do I want this?](#why-do-i-want-this)** | **[Example](#for-example)** | **[How do I use this?](#how-do-i-use-this)** | **[CLI API](#cli-api)** | **[Node API](#node-api)** | **[How do I start using this?](#how-do-i-start-using-this)**
 
 ---
 
@@ -82,7 +84,8 @@ Options:
   -e, --exclude [exclude...]  files to exclude, matches a glob or array pattern
   -h, --help                  display help for command
 ```
-\*compiler options are not added above for readability (but they can be leveraged). To view all cli options, run `merge-tsconfigs --help`!
+
+\*`compilerOptions` are not added above for readability (but they can be leveraged). To view all cli options, run `merge-tsconfigs --help`! `compilerOptions.paths` aren't implemented.
 
 #### Recipes
 
@@ -90,34 +93,84 @@ Merge tsconfig files into a single tsconfig
 
 ```sh
 merge-tsconfigs ./tsconfig.json ./tsconfig.build.json
-# => ./tsconfig.merged.json
+# ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.merged.json
 ```
 
 Merge tsconfig files a specific tsconfig file
 
 ```sh
 merge-tsconfigs ./tsconfig.json ./tsconfig.build.json --out ./tsconfig.out.json
-# => ./tsconfig.out.json
+# ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.out.json
 ```
 
 Merge tsconfig files with unique `include` and `exclude` strings
 
 ```sh
 merge-tsconfigs ./tsconfig.json ./tsconfig.build.json --include 'src/**.ts' --exclude 'test/**.ts'
-# => ./tsconfig.merged.json
+# ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.merged.json
+```
+
+```ts
+// tsconfig.merged.json
+{
+  "compilerOptions": {
+    // ...options
+  },
+  "include": ["src/**.ts"],
+  "exclude": ["test/**.ts", "config/*.ts"]
+}
 ```
 
 Merge tsconfig files with unique `include` and `exclude` or by using arrays
 
 ```sh
 merge-tsconfigs ./tsconfig.json ./tsconfig.build.json --include 'src/**.ts' --exclude 'test/**.ts' 'config/*.ts'
-# => ./tsconfig.merged.json
+# ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.merged.json
+```
+
+```ts
+// tsconfig.merged.json
+{
+  "compilerOptions": {
+    // ...options
+  },
+  "include": ["src/**.ts"],
+  "exclude": ["test/**.ts", "config/*.ts"]
+}
 ```
 
 Sprinkle in some `compilerOptions` to the mix
 
 ```sh
 merge-tsconfigs ./tsconfig.json ./tsconfig.build.json --out ./tsconfig.out.json --allowJs true --noEmit true
+# ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.out.json
+```
+
+```ts
+// tsconfig.out.json
+{
+  "compilerOptions": {
+    "allowJS": true,
+    "noEmit": true,
+  }
+}
+```
+
+Delete a compiler option
+
+```sh
+merge-tsconfigs ./tsconfig.json ./tsconfig.build.json --allowJS --noEmit 'delete'
+# ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.merged.json
+```
+
+```ts
+// tsconfig.merged.json
+{
+  "compilerOptions": {
+    "allowJS": true,
+    // "noEmit": true, // deleted
+  }
+}
 ```
 
 ---
@@ -152,7 +205,7 @@ Merge tsconfig files into a single tsconfig
 const config = mergeTsconfigs({
   files: ['./tsconfig.json', './tsconfig.build.json'],
 });
-// => config = { ... }
+// ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.merged.json
 ```
 
 Merge tsconfig files into a custom output file
@@ -162,7 +215,7 @@ const config = mergeTsconfigs({
   files: ['./tsconfig.json', './tsconfig.build.json'],
   out: './new-dir/tsconfig.out.json',
 });
-// => config = { ... }
+// ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.out.json
 ```
 
 ---
@@ -175,7 +228,7 @@ Install merge-tsconfigs with your preferred package manager.
 npm install merge-tsconfigs --save-dev
 ```
 
-\*unpkg and skypack support coming very soon! 🚀
+\*[unpkg](https://unpkg.com/merge-tsconfigs@0.1.1/dist/index.js) and [skypack](https://cdn.skypack.dev/merge-tsconfigs?min) support coming very soon! 🚀
 
 ---
 

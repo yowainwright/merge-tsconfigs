@@ -1,6 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
-import { LoggerParams, ConfigOptions, TsConfig } from './interfaces';
+import { LoggerParams, ConfigOptions, TsConfig, PartialCompilerOptions } from './interfaces';
 
 /**
  * logger
@@ -71,6 +71,7 @@ export const mergeConfigContent = (tsconfigs: string[], cwd: string, debug = fal
     if (parentTsconfig?.extends) {
       logger({ isDebugging: debug })("error")("mergeConfigContent")("Parent tsconfig:merge-tsconfigs only handles extending from a parent, consider extending tsconfigs less.")(parentTsconfig)
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { extends: _, ...tsconfigWithoutExtends } = tsconfigJSON
     tsconfigJSON = {
       ...parentTsconfig,
@@ -112,6 +113,34 @@ export const writeTsconfig = (tsconfig: TsConfig, cwd: string, out: string, isTe
 }
 
 /**
+ * updateCompilerOptions
+ * @description updates compilerOptions
+ * @param {CompilerOptions} object
+ * @param {CompilerOptions} object
+ * @returns {CompilerOptions} object
+ * TODO fix type issues below
+ */
+export const updateCompilerOptions = (compilerOptions: PartialCompilerOptions = {}, currentCompilerOptions: PartialCompilerOptions): PartialCompilerOptions => {
+  const compilerOptionKeys = compilerOptions ? Object.keys(compilerOptions) : []
+  const hasCompilerOptions = compilerOptionKeys.length > 0
+  if (!hasCompilerOptions) return {}
+  // delete compilerOptions
+  return compilerOptionKeys.reduce((acc = {}, key) => {
+    const updatedOptions = { ...acc, ...currentCompilerOptions }
+    const value = compilerOptions?.[key] as string
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore:next-line
+    if (updatedOptions?.[key] === 'delete') {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore:next-line
+      delete updatedOptions[key]
+      return updatedOptions || {}
+    }
+    return { ...updatedOptions, [key]: value }
+  }, {})
+}
+
+/**
  * mergeConfigContent
  * @description merges tsconfig content
  * @param {tsconfigs} array
@@ -135,14 +164,15 @@ export const mergeTsConfigs = ({
   const cwd = process.cwd()
   const updatedTsconfig = mergeConfigContent(tsconfigs, cwd, debug)
   if (debug) logger({ isDebugging: debug })("debug")("mergeTsConfig")("Updated tsconfig:")(updatedTsconfig);
+
+  const updatedCompilerOptions = updateCompilerOptions(compilerOptions, updatedTsconfig?.compilerOptions || {})
+  const updatedExclude = exclude ? [...updatedTsconfig?.exclude || [], ...exclude] : updatedTsconfig?.exclude
+  const updatedInclude = include ? [...updatedTsconfig.include || [], ...include] : updatedTsconfig?.include
   const tsconfig = {
     ...updatedTsconfig,
-    ...(exclude ? [...updatedTsconfig?.exclude || [], ...exclude] : updatedTsconfig?.exclude),
-    ...(include ? [...updatedTsconfig.include || [], ...include] : updatedTsconfig?.include),
-    compilerOptions: {
-      ...updatedTsconfig?.compilerOptions,
-      ...compilerOptions,
-    }
+    ...updatedExclude,
+    ...updatedInclude,
+    ...(Object.keys(updatedCompilerOptions).length > 0 ? { compilerOptions: updatedCompilerOptions } : {})
   }
   return writeTsconfig(tsconfig, cwd, out, isTesting)
 }
