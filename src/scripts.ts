@@ -71,6 +71,7 @@ export const mergeConfigContent = (tsconfigs: string[], cwd: string, debug = fal
     if (parentTsconfig?.extends) {
       logger({ isDebugging: debug })("error")("mergeConfigContent")("Parent tsconfig:merge-tsconfigs only handles extending from a parent, consider extending tsconfigs less.")(parentTsconfig)
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { extends: _, ...tsconfigWithoutExtends } = tsconfigJSON
     tsconfigJSON = {
       ...parentTsconfig,
@@ -118,20 +119,24 @@ export const writeTsconfig = (tsconfig: TsConfig, cwd: string, out: string, isTe
  * @param {CompilerOptions} object
  * @returns {CompilerOptions} object
  */
-export const updateCompilerOptions = (compilerOptions: PartialCompilerOptions = {}, currentCompilerOptions: PartialCompilerOptions) => {
+export const updateCompilerOptions = (compilerOptions: PartialCompilerOptions = {}, currentCompilerOptions: PartialCompilerOptions): PartialCompilerOptions => {
   const compilerOptionKeys = compilerOptions ? Object.keys(compilerOptions) : []
   const hasCompilerOptions = compilerOptionKeys.length > 0
   if (!hasCompilerOptions) return {}
-  // delete compilerOptions + add compilerOptions.paths
-  return hasCompilerOptions ? compilerOptionKeys.reduce((acc = {}, key) => {
+  // delete compilerOptions
+  return compilerOptionKeys.reduce((acc = {}, key) => {
     const updatedOptions = { ...acc, ...currentCompilerOptions }
     const value = compilerOptions?.[key] as string
-    if (updatedOptions[key] === 'delete') {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore:next-line
+    if (updatedOptions?.[key] === 'delete') {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore:next-line
       delete updatedOptions[key]
-      return updatedOptions
+      return updatedOptions || {}
     }
     return { ...updatedOptions, [key]: value }
-  }, {}) : {}
+  }, {})
 }
 
 /**

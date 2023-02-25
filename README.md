@@ -84,7 +84,8 @@ Options:
   -e, --exclude [exclude...]  files to exclude, matches a glob or array pattern
   -h, --help                  display help for command
 ```
-\*compiler options are not added above for readability (but they can be leveraged). To view all cli options, run `merge-tsconfigs --help`!
+
+\*`compilerOptions` are not added above for readability (but they can be leveraged). To view all cli options, run `merge-tsconfigs --help`! `compilerOptions.paths` aren't implemented.
 
 #### Recipes
 
@@ -92,34 +93,84 @@ Merge tsconfig files into a single tsconfig
 
 ```sh
 merge-tsconfigs ./tsconfig.json ./tsconfig.build.json
-# => ./tsconfig.merged.json
+# ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.merged.json
 ```
 
 Merge tsconfig files a specific tsconfig file
 
 ```sh
 merge-tsconfigs ./tsconfig.json ./tsconfig.build.json --out ./tsconfig.out.json
-# => ./tsconfig.out.json
+# ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.out.json
 ```
 
 Merge tsconfig files with unique `include` and `exclude` strings
 
 ```sh
 merge-tsconfigs ./tsconfig.json ./tsconfig.build.json --include 'src/**.ts' --exclude 'test/**.ts'
-# => ./tsconfig.merged.json
+# ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.merged.json
+```
+
+```ts
+// tsconfig.merged.json
+{
+  "compilerOptions": {
+    // ...options
+  },
+  "include": ["src/**.ts"],
+  "exclude": ["test/**.ts", "config/*.ts"]
+}
 ```
 
 Merge tsconfig files with unique `include` and `exclude` or by using arrays
 
 ```sh
 merge-tsconfigs ./tsconfig.json ./tsconfig.build.json --include 'src/**.ts' --exclude 'test/**.ts' 'config/*.ts'
-# => ./tsconfig.merged.json
+# ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.merged.json
+```
+
+```ts
+// tsconfig.merged.json
+{
+  "compilerOptions": {
+    // ...options
+  },
+  "include": ["src/**.ts"],
+  "exclude": ["test/**.ts", "config/*.ts"]
+}
 ```
 
 Sprinkle in some `compilerOptions` to the mix
 
 ```sh
 merge-tsconfigs ./tsconfig.json ./tsconfig.build.json --out ./tsconfig.out.json --allowJs true --noEmit true
+# ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.out.json
+```
+
+```ts
+// tsconfig.out.json
+{
+  "compilerOptions": {
+    "allowJS": true,
+    "noEmit": true,
+  }
+}
+```
+
+Delete a compiler option
+
+```sh
+merge-tsconfigs ./tsconfig.json ./tsconfig.build.json --allowJS --noEmit 'delete'
+# ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.merged.json
+```
+
+```ts
+// tsconfig.merged.json
+{
+  "compilerOptions": {
+    "allowJS": true,
+    // "noEmit": true, // deleted
+  }
+}
 ```
 
 ---
@@ -154,7 +205,7 @@ Merge tsconfig files into a single tsconfig
 const config = mergeTsconfigs({
   files: ['./tsconfig.json', './tsconfig.build.json'],
 });
-// => config = { ... }
+// ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.merged.json
 ```
 
 Merge tsconfig files into a custom output file
@@ -164,7 +215,7 @@ const config = mergeTsconfigs({
   files: ['./tsconfig.json', './tsconfig.build.json'],
   out: './new-dir/tsconfig.out.json',
 });
-// => config = { ... }
+// ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.out.json
 ```
 
 ---
