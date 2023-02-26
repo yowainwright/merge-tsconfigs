@@ -8,7 +8,7 @@
 [![Github](https://badgen.net/badge/icon/github?icon=github&label&color=grey)](https://github.com/yowainwright/merge-tsconfigs)
 ![Twitter](https://img.shields.io/twitter/url?url=https%3A%2F%2Fgithub.com%2Fyowainwright%2Fmerge-tsconfigs)
 
-_Merge-tsconfigs_ is a CLI and node tool for merging tsconfig files into the exact tsconfig file you want. 💪
+**WIP:** _Merge-tsconfigs_ is a CLI and node tool for merging tsconfig files into the exact tsconfig file you want. 💪
 
 ---
 
