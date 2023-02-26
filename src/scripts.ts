@@ -1,5 +1,6 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
+import JSON5 from 'json5'
 import { LoggerParams, ConfigOptions, TsConfig, PartialCompilerOptions } from './interfaces';
 
 /**
@@ -44,7 +45,7 @@ export function resolveJSON(
   debug = false
 ): TsConfig {
   try {
-    const json = JSON.parse(readFileSync(path, "utf8"));
+    const json = JSON5.parse(readFileSync(path, "utf8"));
     return json;
   } catch (err) {
     console.log({ err });
@@ -107,6 +108,9 @@ export const mergeConfigContent = (tsconfigs: string[], cwd: string, debug = fal
 export const writeTsconfig = (tsconfig: TsConfig, cwd: string, out: string, isTesting: boolean) => {
   if (isTesting) return tsconfig
   const path = out.length ? out : `${cwd}/tsconfig.merged.json`
+  const json = JSON5.stringify(tsconfig)
+  console.log({ tsconfig })
+  console.log({ json })
   mkdirSync(dirname(path), { recursive: true })
   writeFileSync(path, JSON.stringify(tsconfig, null, 2))
   return tsconfig

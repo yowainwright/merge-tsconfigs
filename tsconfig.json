@@ -21,11 +21,6 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": false,
-    "plugins": [
-      {
-        "transform": "ts-transformer-keys/transformer"
-      }
-    ]
   },
   "include": ["src", "test"],
   "exclude": ["test/*.ts", "dist"],
