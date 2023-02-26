@@ -11,6 +11,7 @@ specifiers:
   eslint: ^8.32.0
   eslint-config-prettier: ^8.6.0
   husky: ^8.0.3
+  json5: ^2.2.3
   lint-staged: ^13.1.0
   prettier: ^2.8.3
   release-it: ^15.6.0
@@ -25,6 +26,7 @@ specifiers:
 
 dependencies:
   commander: 9.5.0
+  json5: 2.2.3
 
 devDependencies:
   '@commitlint/cli': 17.4.2
@@ -3121,6 +3123,12 @@ packages:
   /json-stable-stringify-without-jsonify/1.0.1:
     resolution: {integrity: sha512-Bdboy+l7tA3OGW6FjyFHWkP5LuByj1Tk33Ljyq0axyzdk9//JSi2u3fP1QSmd1KNwq6VOKYGlAu87CisVir6Pw==}
     dev: true
+
+  /json5/2.2.3:
+    resolution: {integrity: sha512-XmOWe7eyHYH14cLdVPoyg+GOH3rYX++KpzrylJwSW98t3Nk+U8XOl8FWKOgwtzdb8lXGf6zYwDUzeHMWfxasyg==}
+    engines: {node: '>=6'}
+    hasBin: true
+    dev: false
 
   /jsonc-parser/3.2.0:
     resolution: {integrity: sha512-gfFQZrcTc8CnKXp6Y4/CBT3fTc0OVuDofpre4aEeEpSBPV5X5v4+Vmx+8snU7RLPrNHPKSgLxGo9YuQzz20o+w==}

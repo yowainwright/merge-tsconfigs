@@ -22,6 +22,7 @@
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "clean": "rimraf dist config",
     "cmd:test": "ts-node src/program.ts --isTestingCLI",
+    "cmd:test:cli": "ts-node src/program.ts 'tsconfig.json' --out 'tsconfig.test.json' --outDir 'foo' --debug",
     "commit": "git-cz",
     "commit-msg": "commitlint --edit $1",
     "lint": "eslint src --ext .ts",
@@ -36,7 +37,8 @@
     "update": "codependence --update"
   },
   "dependencies": {
-    "commander": "^9.5.0"
+    "commander": "^9.5.0",
+    "json5": "^2.2.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.2",

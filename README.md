@@ -228,7 +228,14 @@ Install merge-tsconfigs with your preferred package manager.
 npm install merge-tsconfigs --save-dev
 ```
 
-\*[unpkg](https://unpkg.com/merge-tsconfigs@0.1.1/dist/index.js) and [skypack](https://cdn.skypack.dev/merge-tsconfigs?min) support coming very soon! 🚀
+\*_Untested_: In, Deno, Snowpack, or other options, you can import merge-tsconfigs directly into your project.
+```ts
+import mergeTsconfigs from 'npm:merge-tsconfigs';
+// or
+import mergeTsconfigs from "https://cdn.skypack.dev/merge-tsconfigs@latest";
+// or
+import mergeTsconfigs from "https://unpkg.com/merge-tsconfigs@latest/dist/index.js";
+```
 
 ---
 
