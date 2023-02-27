@@ -13,6 +13,8 @@ specifiers:
   husky: ^8.0.3
   json5: ^2.2.3
   lint-staged: ^13.1.0
+  n: ^9.0.1
+  pnpm: ^7.28.0
   prettier: ^2.8.3
   release-it: ^15.6.0
   rimraf: ^3.0.2
@@ -39,6 +41,8 @@ devDependencies:
   eslint-config-prettier: 8.6.0_eslint@8.32.0
   husky: 8.0.3
   lint-staged: 13.1.0
+  n: 9.0.1
+  pnpm: 7.28.0
   prettier: 2.8.3
   release-it: 15.6.0
   rimraf: 3.0.2
@@ -3486,6 +3490,12 @@ packages:
       thenify-all: 1.6.0
     dev: true
 
+  /n/9.0.1:
+    resolution: {integrity: sha512-SsKwY5iFdKd3xpsT4ISFmRLnCVcx+eNMc2NIlxMQL+w6zKK4hjaMvSZf8V+Fq2ipVCuuLD2fhVJSA6cszfJq9g==}
+    os: ['!win32']
+    hasBin: true
+    dev: true
+
   /nanoid/3.3.4:
     resolution: {integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
@@ -3866,6 +3876,12 @@ packages:
       jsonc-parser: 3.2.0
       mlly: 1.1.1
       pathe: 1.1.0
+    dev: true
+
+  /pnpm/7.28.0:
+    resolution: {integrity: sha512-nbuY07S2519jEjaV9KLjSFmOwh0b6KIViIdc/RCJkgco8SZa2+ikQQe4N3CfNn5By5BH0dKVbZ8Ox1Mw8wItSA==}
+    engines: {node: '>=14.6'}
+    hasBin: true
     dev: true
 
   /postcss-load-config/3.1.4_ts-node@10.9.1:
