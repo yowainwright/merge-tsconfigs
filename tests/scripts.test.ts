@@ -5,6 +5,7 @@ const {
   logger,
   mergeConfigContent,
   mergeTsConfigs,
+  mergeConfigObjects,
   resolveJSON,
   updateCompilerOptions,
   writeTsconfig
@@ -68,4 +69,9 @@ test('writeTsconfig', () => {
 test('updateCompilerOptions delete compilerOptions', () => {
   const json = updateCompilerOptions({ target: 'esnext' as keyof unknown, allowJS: true }, { allowJS: 'delete' });
   expect(json).toEqual({ target: 'esnext' });
+})
+
+test('mergeConfigObjects', () => {
+  const json = mergeConfigObjects({ compilerOptions: { target: 'esnext' as keyof unknown, allowJS: true } }, { compilerOptions: { target: 'commonjs' as keyof unknown } });
+  expect(json).toEqual({ compilerOptions: { target: 'commonjs', allowJS: true } });
 })
