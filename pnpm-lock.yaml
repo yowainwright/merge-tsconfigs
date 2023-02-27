@@ -13,7 +13,6 @@ specifiers:
   husky: ^8.0.3
   json5: ^2.2.3
   lint-staged: ^13.1.0
-  n: ^9.0.1
   pnpm: ^7.28.0
   prettier: ^2.8.3
   release-it: ^15.6.0
@@ -41,7 +40,6 @@ devDependencies:
   eslint-config-prettier: 8.6.0_eslint@8.32.0
   husky: 8.0.3
   lint-staged: 13.1.0
-  n: 9.0.1
   pnpm: 7.28.0
   prettier: 2.8.3
   release-it: 15.6.0
@@ -3488,12 +3486,6 @@ packages:
       any-promise: 1.3.0
       object-assign: 4.1.1
       thenify-all: 1.6.0
-    dev: true
-
-  /n/9.0.1:
-    resolution: {integrity: sha512-SsKwY5iFdKd3xpsT4ISFmRLnCVcx+eNMc2NIlxMQL+w6zKK4hjaMvSZf8V+Fq2ipVCuuLD2fhVJSA6cszfJq9g==}
-    os: ['!win32']
-    hasBin: true
     dev: true
 
   /nanoid/3.3.4:
