@@ -55,6 +55,27 @@ export function resolveJSON(
   }
 }
 
+export const mergeConfigObjects = (tsconfig1: TsConfig, tsconfig2: TsConfig) => ({
+  ...tsconfig1,
+  ...tsconfig2,
+  compilerOptions: {
+    ...tsconfig1?.compilerOptions,
+    ...tsconfig2?.compilerOptions,
+  },
+  ...(tsconfig1?.exclude || tsconfig2?.exclude ? {
+    exclude: [
+      ...(tsconfig1?.exclude || []),
+      ...(tsconfig2?.exclude || []),
+    ]
+  } : {}),
+  ...(tsconfig1?.include || tsconfig2?.include ? {
+    include: [
+      ...(tsconfig1?.include || []),
+      ...(tsconfig2?.include || []),
+    ]
+  } : {}),
+})
+
 /**
  * mergeConfigContent
  * @description merges tsconfig content
@@ -74,27 +95,13 @@ export const mergeConfigContent = (tsconfigs: string[], cwd: string, debug = fal
     }
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { extends: _, ...tsconfigWithoutExtends } = tsconfigJSON
-    tsconfigJSON = {
-      ...parentTsconfig,
-      ...tsconfigWithoutExtends,
-      compilerOptions: {
-        ...parentTsconfig?.compilerOptions,
-        ...tsconfigWithoutExtends?.compilerOptions,
-      }
-    }
+    tsconfigJSON = mergeConfigObjects(parentTsconfig, tsconfigWithoutExtends)
   }
   if (!tsconfigJSON) {
     if (debug) logger({ isDebugging: debug })("error")("mergeConfigContent")("There was an error:")(tsconfigJSON);
     return acc
   }
-  return {
-    ...acc,
-    ...tsconfigJSON,
-    compilerOptions: {
-      ...acc?.compilerOptions,
-      ...tsconfigJSON?.compilerOptions,
-    }
-  }
+  return mergeConfigObjects(acc, tsconfigJSON)
 }, {})
 
 /**
@@ -107,10 +114,7 @@ export const mergeConfigContent = (tsconfigs: string[], cwd: string, debug = fal
  */
 export const writeTsconfig = (tsconfig: TsConfig, cwd: string, out: string, isTesting: boolean) => {
   if (isTesting) return tsconfig
-  const path = out.length ? out : `${cwd}/tsconfig.merged.json`
-  const json = JSON5.stringify(tsconfig)
-  console.log({ tsconfig })
-  console.log({ json })
+  const path = `${cwd}/${out}`
   mkdirSync(dirname(path), { recursive: true })
   writeFileSync(path, JSON.stringify(tsconfig, null, 2))
   return tsconfig
@@ -158,7 +162,7 @@ export const mergeTsConfigs = ({
   include,
   compilerOptions,
   debug = false,
-  out = '',
+  out = 'tsconfig.merged.json',
   isTesting = false,
 }: ConfigOptions) => {
   if (tsconfigs.length === 0) {
@@ -170,8 +174,8 @@ export const mergeTsConfigs = ({
   if (debug) logger({ isDebugging: debug })("debug")("mergeTsConfig")("Updated tsconfig:")(updatedTsconfig);
 
   const updatedCompilerOptions = updateCompilerOptions(compilerOptions, updatedTsconfig?.compilerOptions || {})
-  const updatedExclude = exclude ? [...updatedTsconfig?.exclude || [], ...exclude] : updatedTsconfig?.exclude
-  const updatedInclude = include ? [...updatedTsconfig.include || [], ...include] : updatedTsconfig?.include
+  const updatedExclude = exclude ? { exclude: [...updatedTsconfig?.exclude || [], ...exclude] } : {}
+  const updatedInclude = include ? { include: [...updatedTsconfig.include || [], ...include] } : {}
   const tsconfig = {
     ...updatedTsconfig,
     ...updatedExclude,

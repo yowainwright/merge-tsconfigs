@@ -21,8 +21,12 @@ export interface CompilerOption {
   value: string;
 }
 export interface Options {
+  out?: string;
+  exclude?: string[];
+  include?: string[];
   tsconfigs?: string[];
   debug?: boolean;
+  isTesting?: boolean;
   isTestingCLI?: boolean;
   [key: string]: string | boolean | string[] | undefined;
 }

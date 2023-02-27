@@ -22,7 +22,7 @@
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "clean": "rimraf dist config",
     "cmd:test": "ts-node src/program.ts --isTestingCLI",
-    "cmd:test:cli": "ts-node src/program.ts 'tsconfig.json' --out 'tsconfig.test.json' --outDir 'foo' --debug",
+    "cmd:test:cli": "ts-node src/program.ts 'tsconfig.json' --out 'tsconfig.test.json' --outDir 'fooboo' --debug",
     "commit": "git-cz",
     "commit-msg": "commitlint --edit $1",
     "lint": "eslint src --ext .ts",
