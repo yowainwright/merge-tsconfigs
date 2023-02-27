@@ -11,16 +11,24 @@ import { compilerOptions } from './config'
  * @param Options
  * @returns  void
  */
-export async function action(files: string[], options: Options = {}): Promise<void> {
-  // capture/test CLI options
-  const { debug = false, isTesting = false, isTestingCLI = false, ...compilerOptions } = options
-  if (isTestingCLI) {
-    console.info({ files, options })
-    return
-  }
+export function action(files: string[], options: Options = {}): void {
 
   try {
-    await script({ debug, tsconfigs: files, compilerOptions })
+    // capture/test CLI options
+    const {
+      debug = false,
+      exclude,
+      include,
+      isTesting = false,
+      isTestingCLI = false,
+      out,
+      ...compilerOptions
+    } = options
+    if (isTestingCLI) {
+      console.info({ files, options })
+      return
+    }
+    script({ debug, exclude, include, isTesting, out, tsconfigs: files, compilerOptions })
   } catch (err) {
     logger({ isDebugging: options.debug })('error')('action')('There was an error:')(err as unknown)
   }

@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": ".", // This is a comment
     "target": "esnext",
     "module": "commonjs",
     "rootDir": "src",
