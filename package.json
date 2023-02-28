@@ -1,6 +1,6 @@
 {
   "name": "merge-tsconfigs",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Merge-tsconfigs is a CLI and node tool for merging tsconfig files into the exact tsconfig file you want 🛣️",
   "type": "module",
   "module": "dist/index.js",
