@@ -22,13 +22,14 @@ export function action(files: string[], options: Options = {}): void {
       isTesting = false,
       isTestingCLI = false,
       out,
+      path,
       ...compilerOptions
     } = options
     if (isTestingCLI) {
       console.info({ files, options })
       return
     }
-    script({ debug, exclude, include, isTesting, out, tsconfigs: files, compilerOptions })
+    script({ debug, exclude, include, isTesting, path, out, tsconfigs: files, compilerOptions })
   } catch (err) {
     logger({ isDebugging: options.debug })('error')('action')('There was an error:')(err as unknown)
   }
@@ -49,6 +50,7 @@ program.name('merge-tsconfigs')
   .option('-o, --out <file>', 'output file, otherwise, the file will be written to tsconfig.merged.json')
   .option('--isTesting', 'enable testing')
   .option('-t, --isTestingCLI', 'enable CLI only testing')
+  .option('-p, --path <path>', 'a json parseable string wrapped object, e.g. {"item/*": ["foo": "bar"]}')
 
 /**
  * @description add dynamic program options for tsconfig.compilerOptions

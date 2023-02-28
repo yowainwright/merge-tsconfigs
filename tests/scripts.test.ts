@@ -6,6 +6,7 @@ const {
   mergeConfigContent,
   mergeTsConfigs,
   mergeConfigObjects,
+  parsePath,
   resolveJSON,
   updateCompilerOptions,
   writeTsconfig
@@ -67,11 +68,21 @@ test('writeTsconfig', () => {
 });
 
 test('updateCompilerOptions delete compilerOptions', () => {
-  const json = updateCompilerOptions({ target: 'esnext' as keyof unknown, allowJS: true }, { allowJS: 'delete' });
+  const json = updateCompilerOptions({ target: 'esnext' as keyof unknown, allowJS: true }, { allowJS: 'delete' }, {});
   expect(json).toEqual({ target: 'esnext' });
+})
+
+test('updateCompilerOptions with path', () => {
+  const json = updateCompilerOptions({ target: 'esnext' as keyof unknown, allowJS: true }, {}, { 'item/*': ['foo', 'bar'] });
+  expect(json).toEqual({ target: 'esnext', allowJS: true, paths: { 'item/*': ['foo', 'bar'] } });
 })
 
 test('mergeConfigObjects', () => {
   const json = mergeConfigObjects({ compilerOptions: { target: 'esnext' as keyof unknown, allowJS: true } }, { compilerOptions: { target: 'commonjs' as keyof unknown } });
   expect(json).toEqual({ compilerOptions: { target: 'commonjs', allowJS: true } });
+})
+
+test('parsePath', () => {
+  const json = parsePath('{"item/*": ["foo", "bar"]}', true);
+  expect(json).toEqual({ 'item/*': ['foo', 'bar'] });
 })

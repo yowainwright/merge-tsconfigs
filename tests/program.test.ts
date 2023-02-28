@@ -111,3 +111,8 @@ test("program w/ out option", async () => {
     },
   })
 })
+
+test("program w/ path option", async () => {
+  const { stdout = '{}' } = await execPromise("ts-node ./src/program.ts foo.json --path '{\"item/*\": [\"foo\": \"bar\"]}' --isTestingCLI")
+  expect(stdout).toContain('{"item/*": ["foo": "bar"]')
+})
