@@ -1,6 +1,8 @@
 import { mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { dirname, join } from 'path'
 import JSON5 from 'json5'
+import { ValueOf } from 'type-fest';
+import { CompilerOptions } from 'typescript';
 import { LoggerParams, ConfigOptions, TsConfig, PartialCompilerOptions } from './interfaces';
 
 /**
@@ -48,13 +50,19 @@ export function resolveJSON(
     const json = JSON5.parse(readFileSync(path, "utf8"));
     return json;
   } catch (err) {
-    console.log({ err });
     if (debug)
       logger({ isDebugging: debug })("error")("resolveJSON")("There was an error:")(err as unknown);
     return {} as TsConfig;
   }
 }
 
+/**
+ * mergeConfigObjects
+ * @description merges tsconfig objects
+ * @param {tsconfig1} object
+ * @param {tsconfig2} object
+ * @returns {tsconfig} object
+ */
 export const mergeConfigObjects = (tsconfig1: TsConfig, tsconfig2: TsConfig) => ({
   ...tsconfig1,
   ...tsconfig2,
@@ -93,7 +101,7 @@ export const mergeConfigContent = (tsconfigs: string[], cwd: string, debug = fal
     if (parentTsconfig?.extends) {
       logger({ isDebugging: debug })("error")("mergeConfigContent")("Parent tsconfig:merge-tsconfigs only handles extending from a parent, consider extending tsconfigs less.")(parentTsconfig)
     }
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
     const { extends: _, ...tsconfigWithoutExtends } = tsconfigJSON
     tsconfigJSON = mergeConfigObjects(parentTsconfig, tsconfigWithoutExtends)
   }
@@ -128,24 +136,45 @@ export const writeTsconfig = (tsconfig: TsConfig, cwd: string, out: string, isTe
  * @returns {CompilerOptions} object
  * TODO fix type issues below
  */
-export const updateCompilerOptions = (compilerOptions: PartialCompilerOptions = {}, currentCompilerOptions: PartialCompilerOptions): PartialCompilerOptions => {
+export const updateCompilerOptions = (compilerOptions: PartialCompilerOptions = {}, currentCompilerOptions: PartialCompilerOptions, updatedPath: CompilerOptions['paths']): PartialCompilerOptions => {
   const compilerOptionKeys = compilerOptions ? Object.keys(compilerOptions) : []
   const hasCompilerOptions = compilerOptionKeys.length > 0
   if (!hasCompilerOptions) return {}
   // delete compilerOptions
   return compilerOptionKeys.reduce((acc = {}, key) => {
-    const updatedOptions = { ...acc, ...currentCompilerOptions }
+    const updatedOptions: PartialCompilerOptions = { ...acc, ...currentCompilerOptions }
     const value = compilerOptions?.[key] as string
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore:next-line
-    if (updatedOptions?.[key] === 'delete') {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore:next-line
-      delete updatedOptions[key]
+    if (updatedOptions?.[key] as ValueOf<PartialCompilerOptions> === 'delete') {
+      delete updatedOptions[key] as ValueOf<PartialCompilerOptions>
       return updatedOptions || {}
     }
-    return { ...updatedOptions, [key]: value }
+    // coonstruct paths object
+    const paths = {
+      ...(updatedOptions.paths || {}) as CompilerOptions['paths'],
+      ...(key === 'paths' ? { value } : {}),
+      ...(updatedPath ? { ...updatedPath } : {})
+    }
+    return { ...updatedOptions, [key]: value, ...(Object.keys(paths).length > 0 ? { paths } : {}) }
   }, {})
+}
+
+/**
+ * parsePath
+ * @description parses a string wrapped object
+ * @param {path} string
+ * @param {debug} boolean
+ * @returns {CompilerOptions.paths} object
+ */
+export const parsePath = (path = '', debug = false): CompilerOptions['paths'] => {
+  if (!path) return {}
+  try {
+    const json = JSON5.parse(path)
+    return json;
+  } catch (err) {
+    if (debug)
+      logger({ isDebugging: debug })("error")("parsePath")("There was an error:")(err as unknown);
+    return {};
+  }
 }
 
 /**
@@ -163,6 +192,7 @@ export const mergeTsConfigs = ({
   compilerOptions,
   debug = false,
   out = 'tsconfig.merged.json',
+  path,
   isTesting = false,
 }: ConfigOptions) => {
   if (tsconfigs.length === 0) {
@@ -173,9 +203,15 @@ export const mergeTsConfigs = ({
   const updatedTsconfig = mergeConfigContent(tsconfigs, cwd, debug)
   if (debug) logger({ isDebugging: debug })("debug")("mergeTsConfig")("Updated tsconfig:")(updatedTsconfig);
 
-  const updatedCompilerOptions = updateCompilerOptions(compilerOptions, updatedTsconfig?.compilerOptions || {})
+  const updatedPath = parsePath(path, debug)
+  const updatedCompilerOptions = updateCompilerOptions(
+    compilerOptions,
+    updatedTsconfig?.compilerOptions || {},
+    updatedPath
+  )
   const updatedExclude = exclude ? { exclude: [...updatedTsconfig?.exclude || [], ...exclude] } : {}
   const updatedInclude = include ? { include: [...updatedTsconfig.include || [], ...include] } : {}
+
   const tsconfig = {
     ...updatedTsconfig,
     ...updatedExclude,

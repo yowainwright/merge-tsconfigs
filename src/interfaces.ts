@@ -14,6 +14,7 @@ export interface ConfigOptions {
   tsconfigs?: string[];
   exclude?: string[];
   include?: string[];
+  path?: string;
   isTesting?: boolean;
 }
 export interface CompilerOption {
@@ -25,6 +26,7 @@ export interface Options {
   exclude?: string[];
   include?: string[];
   tsconfigs?: string[];
+  path?: string;
   debug?: boolean;
   isTesting?: boolean;
   isTestingCLI?: boolean;

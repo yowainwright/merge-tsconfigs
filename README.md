@@ -82,10 +82,11 @@ Options:
   -o, --out [out]             output file
   -i, --include [include...]  files to include, matches a glob or array pattern
   -e, --exclude [exclude...]  files to exclude, matches a glob or array pattern
+  -p, --path <path>           a json parseable string wrapped object, e.g. {"item/*": ["foo": "bar"]}
   -h, --help                  display help for command
 ```
 
-\*`compilerOptions` are not added above for readability (but they can be leveraged). To view all cli options, run `merge-tsconfigs --help`! `compilerOptions.paths` aren't implemented.
+\*`compilerOptions` are not added above for readability (but they can be leveraged). To view all cli options, run `merge-tsconfigs --help`! `compilerOptions.paths` is a string wrapped object.
 
 #### Recipes
 
@@ -169,6 +170,24 @@ merge-tsconfigs ./tsconfig.json ./tsconfig.build.json --allowJS --noEmit 'delete
   "compilerOptions": {
     "allowJS": true,
     // "noEmit": true, // deleted
+  }
+}
+```
+
+Add a path to `compilerOptions.paths`
+
+```sh
+merge-tsconfigs ./tsconfig.json ./tsconfig.build.json --path '{"item/*": ["foo": "bar"]}'
+# ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.merged.json
+```
+
+```ts
+// tsconfig.merged.json
+{
+  "compilerOptions": {
+    "paths": {
+      "item/*": ["foo": "bar"]
+    }
   }
 }
 ```
