@@ -13,7 +13,7 @@ const {
 } = scripts;
 
 test('logger', () => {
-  const spy = vi.spyOn(console, 'error').mockImplementation(() => { });
+  const spy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
   logger({ isDebugging: false })("error")("foo")("bar")(new Error("baz"));
   expect(spy).toHaveBeenCalled();
 })
