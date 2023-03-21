@@ -1,6 +1,6 @@
 {
   "codependencies": [
-   "commander",
+    "commander",
     "cosmiconfig",
     "fast-glob",
     "fs-extra",
