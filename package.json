@@ -61,6 +61,7 @@
     "tsup": "6.7.0",
     "type-fest": "3.6.1",
     "typescript": "5.0.2",
+    "vite": "^4.2.1",
     "vitest": "^0.28.5"
   },
   "commitlint": {
