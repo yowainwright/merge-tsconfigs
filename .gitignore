@@ -108,3 +108,4 @@ dist
 .dccache
 tsconfig.merged.json
 tsconfig.test.json
+.pnpm-store
