@@ -21,8 +21,8 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "clean": "rimraf dist config",
-    "cmd:test": "ts-node src/program.ts --isTestingCLI",
-    "cmd:test:cli": "ts-node src/program.ts 'tsconfig.json' --out 'tsconfig.test.json' --outDir 'fooboo' --debug",
+    "cmd:test": "tsx src/program.ts --isTestingCLI",
+    "cmd:test:cli": "tsx src/program.ts 'tsconfig.json' --out 'tsconfig.test.json' --outDir 'fooboo' --debug",
     "commit": "git-cz",
     "commit-msg": "commitlint --edit $1",
     "lint": "eslint src --ext .ts",
@@ -59,6 +59,7 @@
     "ts-node": "^10.9.1",
     "tslib": "2.5.0",
     "tsup": "6.7.0",
+    "tsx": "^4.16.2",
     "type-fest": "3.6.1",
     "typescript": "5.0.2",
     "vite": "^4.2.1",

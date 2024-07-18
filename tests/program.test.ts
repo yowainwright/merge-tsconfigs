@@ -6,7 +6,7 @@ import { stdoutToJSON } from "stdouttojson";
 export const execPromise = promisify(exec)
 
 test("program w/ file", async () => {
-  const { stdout = '{}' } = await execPromise("ts-node ./src/program.ts foo.json --isTestingCLI")
+  const { stdout = '{}' } = await execPromise("tsx ./src/program.ts foo.json --isTestingCLI")
   const result = stdoutToJSON(stdout)
   expect(result).toStrictEqual({
     files: ['foo.json'],
@@ -18,7 +18,7 @@ test("program w/ file", async () => {
 
 
 test("program w/ files", async () => {
-  const { stdout = '{}' } = await execPromise("ts-node ./src/program.ts foo.json bar.json --isTestingCLI")
+  const { stdout = '{}' } = await execPromise("tsx ./src/program.ts foo.json bar.json --isTestingCLI")
   const result = stdoutToJSON(stdout)
   expect(result).toStrictEqual({
     files: ['foo.json', 'bar.json'],
@@ -29,7 +29,7 @@ test("program w/ files", async () => {
 })
 
 test("program w/ boolean compiler option", async () => {
-  const { stdout = '{}' } = await execPromise("ts-node ./src/program.ts foo.json --allowJs --isTestingCLI")
+  const { stdout = '{}' } = await execPromise("tsx ./src/program.ts foo.json --allowJs --isTestingCLI")
   const result = stdoutToJSON(stdout)
   expect(result).toStrictEqual({
     files: ['foo.json'],
@@ -41,7 +41,7 @@ test("program w/ boolean compiler option", async () => {
 })
 
 test("program w/ string compiler option", async () => {
-  const { stdout = '{}' } = await execPromise("ts-node ./src/program.ts foo.json --module 'node' --isTestingCLI")
+  const { stdout = '{}' } = await execPromise("tsx ./src/program.ts foo.json --module 'node' --isTestingCLI")
   const result = stdoutToJSON(stdout)
   expect(result).toStrictEqual({
     files: ['foo.json'],
@@ -53,7 +53,7 @@ test("program w/ string compiler option", async () => {
 })
 
 test("program w/ array compiler option", async () => {
-  const { stdout = '{}' } = await execPromise("ts-node ./src/program.ts foo.json --lib 'foo' 'bar' --isTestingCLI")
+  const { stdout = '{}' } = await execPromise("tsx ./src/program.ts foo.json --lib 'foo' 'bar' --isTestingCLI")
   const result = stdoutToJSON(stdout)
   expect(result).toStrictEqual({
     files: ['foo.json'],
@@ -65,7 +65,7 @@ test("program w/ array compiler option", async () => {
 })
 
 test("program w/ include option", async () => {
-  const { stdout = '{}' } = await execPromise("ts-node ./src/program.ts foo.json --include 'foo' --isTestingCLI")
+  const { stdout = '{}' } = await execPromise("tsx ./src/program.ts foo.json --include 'foo' --isTestingCLI")
   const result = stdoutToJSON(stdout)
   expect(result).toStrictEqual({
     files: ['foo.json'],
@@ -77,7 +77,7 @@ test("program w/ include option", async () => {
 })
 
 test("program w/ exclude option", async () => {
-  const { stdout = '{}' } = await execPromise("ts-node ./src/program.ts foo.json --exclude 'foo' --isTestingCLI")
+  const { stdout = '{}' } = await execPromise("tsx ./src/program.ts foo.json --exclude 'foo' --isTestingCLI")
   const result = stdoutToJSON(stdout)
   expect(result).toStrictEqual({
     files: ['foo.json'],
@@ -89,7 +89,7 @@ test("program w/ exclude option", async () => {
 })
 
 test("program w/ debug option", async () => {
-  const { stdout = '{}' } = await execPromise("ts-node ./src/program.ts foo.json --debug --isTestingCLI")
+  const { stdout = '{}' } = await execPromise("tsx ./src/program.ts foo.json --debug --isTestingCLI")
   const result = stdoutToJSON(stdout)
   expect(result).toStrictEqual({
     files: ['foo.json'],
@@ -101,7 +101,7 @@ test("program w/ debug option", async () => {
 })
 
 test("program w/ out option", async () => {
-  const { stdout = '{}' } = await execPromise("ts-node ./src/program.ts foo.json --out 'foo.json' --isTestingCLI")
+  const { stdout = '{}' } = await execPromise("tsx ./src/program.ts foo.json --out 'foo.json' --isTestingCLI")
   const result = stdoutToJSON(stdout)
   expect(result).toStrictEqual({
     files: ['foo.json'],
@@ -113,6 +113,6 @@ test("program w/ out option", async () => {
 })
 
 test("program w/ path option", async () => {
-  const { stdout = '{}' } = await execPromise("ts-node ./src/program.ts foo.json --path '{\"item/*\": [\"foo\": \"bar\"]}' --isTestingCLI")
+  const { stdout = '{}' } = await execPromise("tsx ./src/program.ts foo.json --path '{\"item/*\": [\"foo\": \"bar\"]}' --isTestingCLI")
   expect(stdout).toContain('{"item/*": ["foo": "bar"]')
 })
