@@ -56,7 +56,6 @@
     "release-it": "15.9.0",
     "rimraf": "4.4.0",
     "stdouttojson": "0.7.2",
-    "ts-node": "^10.9.1",
     "tslib": "2.5.0",
     "tsup": "6.7.0",
     "tsx": "^4.16.2",

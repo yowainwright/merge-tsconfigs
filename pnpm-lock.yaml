@@ -60,15 +60,12 @@ importers:
       stdouttojson:
         specifier: 0.7.2
         version: 0.7.2
-      ts-node:
-        specifier: ^10.9.1
-        version: 10.9.1(@types/node@18.15.5)(typescript@5.0.2)
       tslib:
         specifier: 2.5.0
         version: 2.5.0
       tsup:
         specifier: 6.7.0
-        version: 6.7.0(postcss@8.4.31)(ts-node@10.9.1(@types/node@18.15.5)(typescript@5.0.2))(typescript@5.0.2)
+        version: 6.7.0(postcss@8.4.31)(ts-node@10.9.1(@types/node@18.15.5)(typescript@4.9.4))(typescript@5.0.2)
       tsx:
         specifier: ^4.16.2
         version: 4.16.2
@@ -5521,13 +5518,13 @@ snapshots:
 
   pnpm@7.33.4: {}
 
-  postcss-load-config@3.1.4(postcss@8.4.31)(ts-node@10.9.1(@types/node@18.15.5)(typescript@5.0.2)):
+  postcss-load-config@3.1.4(postcss@8.4.31)(ts-node@10.9.1(@types/node@18.15.5)(typescript@4.9.4)):
     dependencies:
       lilconfig: 2.1.0
       yaml: 1.10.2
     optionalDependencies:
       postcss: 8.4.31
-      ts-node: 10.9.1(@types/node@18.15.5)(typescript@5.0.2)
+      ts-node: 10.9.1(@types/node@18.15.5)(typescript@4.9.4)
 
   postcss@8.4.31:
     dependencies:
@@ -6029,29 +6026,11 @@ snapshots:
       v8-compile-cache-lib: 3.0.1
       yn: 3.1.1
 
-  ts-node@10.9.1(@types/node@18.15.5)(typescript@5.0.2):
-    dependencies:
-      '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.9
-      '@tsconfig/node12': 1.0.11
-      '@tsconfig/node14': 1.0.3
-      '@tsconfig/node16': 1.0.3
-      '@types/node': 18.15.5
-      acorn: 8.8.1
-      acorn-walk: 8.2.0
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.2
-      make-error: 1.3.6
-      typescript: 5.0.2
-      v8-compile-cache-lib: 3.0.1
-      yn: 3.1.1
-
   tslib@1.14.1: {}
 
   tslib@2.5.0: {}
 
-  tsup@6.7.0(postcss@8.4.31)(ts-node@10.9.1(@types/node@18.15.5)(typescript@5.0.2))(typescript@5.0.2):
+  tsup@6.7.0(postcss@8.4.31)(ts-node@10.9.1(@types/node@18.15.5)(typescript@4.9.4))(typescript@5.0.2):
     dependencies:
       bundle-require: 4.0.1(esbuild@0.17.12)
       cac: 6.7.14
@@ -6061,7 +6040,7 @@ snapshots:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
-      postcss-load-config: 3.1.4(postcss@8.4.31)(ts-node@10.9.1(@types/node@18.15.5)(typescript@5.0.2))
+      postcss-load-config: 3.1.4(postcss@8.4.31)(ts-node@10.9.1(@types/node@18.15.5)(typescript@4.9.4))
       resolve-from: 5.0.0
       rollup: 3.10.0
       source-map: 0.8.0-beta.0
