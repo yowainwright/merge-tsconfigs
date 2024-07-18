@@ -20,16 +20,8 @@
     "removeComments": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "sourceMap": false,
+    "sourceMap": false
   },
   "include": ["src", "test"],
-  "exclude": ["test/*.ts", "dist"],
-  "ts-node": {
-    "transpileOnly": true,
-    "esm": true,
-    "moduleTypes": {
-      "package.json": "cjs",
-      "src/*": "cjs"
-    }
-  }
+  "exclude": ["test/*.ts", "dist"]
 }
