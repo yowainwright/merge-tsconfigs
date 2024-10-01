@@ -65,29 +65,7 @@
     "vitest": "^0.28.5"
   },
   "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ],
-    "rules": {
-      "header-max-length": [
-        2,
-        "always",
-        120
-      ],
-      "type-enum": [
-        2,
-        "always",
-        [
-          "chore",
-          "feat",
-          "fix",
-          "docs",
-          "refactor",
-          "revert",
-          "breaking"
-        ]
-      ]
-    }
+    "extends": ["@commitlint/config-conventional"]
   },
   "lint-staged": {
     "src/**/*.ts": [
