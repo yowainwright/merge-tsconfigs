@@ -51,7 +51,7 @@
     "eslint-config-prettier": "8.8.0",
     "husky": "^8.0.3",
     "lint-staged": "13.2.0",
-    "pnpm": "^7.28.0",
+    "pnpm": "^9.15.0",
     "prettier": "2.8.5",
     "release-it": "15.9.0",
     "rimraf": "4.4.0",
