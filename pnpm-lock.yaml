@@ -46,8 +46,8 @@ importers:
         specifier: 13.2.0
         version: 13.2.0
       pnpm:
-        specifier: ^9.15.0
-        version: 9.15.0
+        specifier: ^10.0.0
+        version: 10.0.0
       prettier:
         specifier: 2.8.5
         version: 2.8.5
@@ -2483,8 +2483,8 @@ packages:
   pkg-types@1.0.2:
     resolution: {integrity: sha512-hM58GKXOcj8WTqUXnsQyJYXdeAPbythQgEF3nTcEo+nkD49chjQ9IKm/QJy9xf6JakXptz86h7ecP2024rrLaQ==}
 
-  pnpm@9.15.0:
-    resolution: {integrity: sha512-duI3l2CkMo7EQVgVvNZije5yevN3mqpMkU45RBVsQpmSGon5djge4QfUHxLPpLZmgcqccY8GaPoIMe1MbYulbA==}
+  pnpm@10.0.0:
+    resolution: {integrity: sha512-uP71SUvT/ky9Ttq9B0XfLuW+PksLiwj6ZDqj5MZwLMwPANaPqKjJhYpzWgAySFpEmQ7SgQUmyHXkFvABsX3xKw==}
     engines: {node: '>=18.12'}
     hasBin: true
 
@@ -5737,7 +5737,7 @@ snapshots:
       mlly: 1.1.1
       pathe: 1.1.0
 
-  pnpm@9.15.0: {}
+  pnpm@10.0.0: {}
 
   postcss-load-config@3.1.4(postcss@8.5.6)(ts-node@10.9.1(@types/node@18.15.5)(typescript@4.9.4)):
     dependencies:
