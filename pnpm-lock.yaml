@@ -47,7 +47,7 @@ importers:
         version: 13.2.0
       pnpm:
         specifier: ^10.0.0
-        version: 10.27.0
+        version: 10.28.2
       prettier:
         specifier: 2.8.5
         version: 2.8.5
@@ -2488,8 +2488,8 @@ packages:
   pkg-types@1.0.2:
     resolution: {integrity: sha512-hM58GKXOcj8WTqUXnsQyJYXdeAPbythQgEF3nTcEo+nkD49chjQ9IKm/QJy9xf6JakXptz86h7ecP2024rrLaQ==}
 
-  pnpm@10.27.0:
-    resolution: {integrity: sha512-ctaZ2haxF5wUup5k3HHJpAmIy9xlwmTLDkidt96RfyDc9NZNhyNiXylpulLUt+KhFwaC2awqXcrqq3MrfhbwSg==}
+  pnpm@10.28.2:
+    resolution: {integrity: sha512-QYcvA3rSL3NI47Heu69+hnz9RI8nJtnPdMCPGVB8MdLI56EVJbmD/rwt9kC1Q43uYCPrsfhO1DzC1lTSvDJiZA==}
     engines: {node: '>=18.12'}
     hasBin: true
 
@@ -3416,7 +3416,7 @@ snapshots:
       '@types/node': 18.15.5
       chalk: 4.1.2
       cosmiconfig: 8.1.0
-      cosmiconfig-typescript-loader: 4.3.0(@types/node@18.15.5)(cosmiconfig@8.1.0)(ts-node@10.9.1(@types/node@18.15.5)(typescript@4.9.4))(typescript@4.9.4)
+      cosmiconfig-typescript-loader: 4.3.0(@types/node@18.15.5)(cosmiconfig@8.1.0)(ts-node@10.9.1(@types/node@18.15.5)(typescript@5.0.2))(typescript@4.9.4)
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
@@ -4374,7 +4374,7 @@ snapshots:
 
   core-util-is@1.0.3: {}
 
-  cosmiconfig-typescript-loader@4.3.0(@types/node@18.15.5)(cosmiconfig@8.1.0)(ts-node@10.9.1(@types/node@18.15.5)(typescript@4.9.4))(typescript@4.9.4):
+  cosmiconfig-typescript-loader@4.3.0(@types/node@18.15.5)(cosmiconfig@8.1.0)(ts-node@10.9.1(@types/node@18.15.5)(typescript@5.0.2))(typescript@4.9.4):
     dependencies:
       '@types/node': 18.15.5
       cosmiconfig: 8.1.0
@@ -5745,7 +5745,7 @@ snapshots:
       mlly: 1.1.1
       pathe: 1.1.0
 
-  pnpm@10.27.0: {}
+  pnpm@10.28.2: {}
 
   postcss-load-config@3.1.4(postcss@8.5.6)(ts-node@10.9.1(@types/node@18.15.5)(typescript@4.9.4)):
     dependencies:
