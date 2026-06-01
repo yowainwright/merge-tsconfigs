@@ -62,7 +62,7 @@
     "type-fest": "3.6.1",
     "typescript": "5.0.2",
     "vite": "^6.4.2",
-    "vitest": "^0.28.5"
+    "vitest": "^4.1.0"
   },
   "commitlint": {
     "extends": ["@commitlint/config-conventional"]
