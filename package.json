@@ -2,96 +2,92 @@
   "name": "merge-tsconfigs",
   "version": "0.2.2",
   "description": "Merge-tsconfigs is a CLI and node tool for merging tsconfig files into the exact tsconfig file you want 🛣️",
-  "type": "module",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "unpkg": "dist/index.js",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
-  },
-  "bin": {
-    "merge-tsconfigs": "dist/index.cjs"
-  },
-  "files": [
-    "dist"
-  ],
-  "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts",
-    "clean": "rimraf dist config",
-    "cmd:test": "tsx src/program.ts --isTestingCLI",
-    "cmd:test:cli": "tsx src/program.ts 'tsconfig.json' --out 'tsconfig.test.json' --outDir 'fooboo' --debug",
-    "commit": "git-cz",
-    "commit-msg": "commitlint --edit $1",
-    "lint": "eslint src --ext .ts",
-    "lint-fix": "pnpm run lint --fix",
-    "pre-commit": "lint-staged",
-    "prepare": "husky install",
-    "prepublishOnly": "pnpm run test && pnpm run build",
-    "release": "release-it",
-    "setup:config": "mkdir config && cd config npx tsc --init",
-    "test": "vitest run",
-    "typecheck": "tsc --noEmit",
-    "update": "codependence --update"
-  },
-  "dependencies": {
-    "commander": "10.0.0",
-    "json5": "^2.2.3"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "17.4.4",
-    "@commitlint/config-conventional": "17.4.4",
-    "@types/node": "18.15.5",
-    "@typescript-eslint/eslint-plugin": "5.56.0",
-    "@typescript-eslint/parser": "5.56.0",
-    "codependence": "^0.2.6",
-    "eslint": "8.36.0",
-    "eslint-config-prettier": "8.8.0",
-    "husky": "^8.0.3",
-    "lint-staged": "13.2.0",
-    "pnpm": "^10.0.0",
-    "prettier": "2.8.5",
-    "release-it": "15.9.0",
-    "rimraf": "4.4.0",
-    "stdouttojson": "0.7.2",
-    "tslib": "2.5.0",
-    "tsup": "6.7.0",
-    "tsx": "^4.16.2",
-    "type-fest": "3.6.1",
-    "typescript": "5.0.2",
-    "vite": "^6.4.2",
-    "vitest": "^0.28.5"
-  },
-  "commitlint": {
-    "extends": ["@commitlint/config-conventional"]
-  },
-  "lint-staged": {
-    "src/**/*.ts": [
-      "eslint --cache --fix",
-      "vitest related --run"
-    ]
-  },
-  "release-it": {
-    "git": {
-      "commitMessage": "chore: release v$npm_package_version"
-    }
-  },
   "keywords": [
+    "ts",
     "tsconfig",
-    "typescript",
-    "tsconfig-merge",
     "tsconfig-cli",
-    "ts"
+    "tsconfig-merge",
+    "typescript"
   ],
+  "bugs": {
+    "url": "https://github.com/yowainwright/merge-tsconfigs/issues"
+  },
+  "license": "MIT",
+  "author": "Jeff Wainwright <https:jeffry.in> (yowainwright@gmail.com)",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yowainwright/merge-tsconfigs.git"
   },
-  "author": "Jeff Wainwright <https:jeffry.in> (yowainwright@gmail.com)",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/yowainwright/merge-tsconfigs/issues"
+  "bin": {
+    "merge-tsconfigs": "./dist/program.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean && tsup src/program.ts --format esm --dts",
+    "clean": "node --eval \"fs.rmSync('dist', { recursive: true, force: true }); fs.rmSync('config', { recursive: true, force: true })\"",
+    "cmd:test": "tsx src/program.ts --isTestingCLI",
+    "cmd:test:cli": "tsx src/program.ts 'tsconfig.json' --out 'tsconfig.test.json' --outDir 'fooboo' --debug",
+    "commit": "git-cz",
+    "commit-msg": "sh scripts/commit-msg.sh",
+    "format": "oxfmt src tests package.json tsconfig.json .codependencerc .oxlintrc.json .oxfmtrc.json .github/workflows",
+    "format:check": "oxfmt --check src tests package.json tsconfig.json .codependencerc .oxlintrc.json .oxfmtrc.json .github/workflows",
+    "lint": "oxlint src tests",
+    "lint-fix": "oxlint src tests --fix",
+    "pre-commit": "lint-staged",
+    "prepare": "sh scripts/setup.sh",
+    "prepublishOnly": "pnpm run typecheck && pnpm run format:check && pnpm run lint && pnpm run test && pnpm run build",
+    "release": "release-it",
+    "setup": "sh scripts/setup.sh",
+    "setup:config": "mkdir config && cd config npx tsc --init",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "typecheck:tsgo": "tsgo --noEmit",
+    "update": "codependence --update"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.2",
+    "@typescript/native-preview": "7.0.0-dev.20260421.2",
+    "codependence": "^0.3.1",
+    "lint-staged": "^17.0.7",
+    "oxfmt": "^0.53.0",
+    "oxlint": "^1.68.0",
+    "pastoralist": "^1.12.3",
+    "release-it": "^20.2.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.22.4",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.8"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,jsonc,yml,yaml,md}": [
+      "oxfmt"
+    ],
+    "*.{js,jsx,ts,tsx}": [
+      "oxlint --fix",
+      "vitest related --run"
+    ]
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "pnpm@10.12.1",
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release v$npm_package_version"
+    }
   }
 }

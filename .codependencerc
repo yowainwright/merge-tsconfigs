@@ -1,30 +1,16 @@
 {
   "codependencies": [
-    "commander",
-    "cosmiconfig",
-    "fast-glob",
-    "fs-extra",
-    "gradient-string",
-    "@commitlint/cli",
-    "@commitlint/config-conventional",
-    "@types/gradient-string",
-    "@types/fs-extra",
     "@types/node",
-    "@typescript-eslint/eslint-plugin",
-    "@typescript-eslint/parser",
+    "@typescript/native-preview",
     "codependence",
-    "eslint",
-    "eslint-config-prettier",
-    "husky",
     "lint-staged",
-    "prettier",
+    "oxfmt",
+    "oxlint",
+    "pastoralist",
     "release-it",
-    "rimraf",
-    "stdouttojson",
-    "tslib",
-    "ts-node",
     "tsup",
-    "type-fest",
-    "typescript"
+    "tsx",
+    "typescript",
+    "vitest"
   ]
 }

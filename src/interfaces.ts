@@ -1,36 +1,35 @@
-import { CompilerOptions } from 'typescript';
-import { PartialDeep } from 'type-fest';
+import type { CompilerOptions } from 'typescript'
 
 export interface CompilerOptionOverrides {
-  [key: string]: string | boolean | string[] | undefined;
+  [key: string]: CompilerOptions[keyof CompilerOptions] | 'delete' | undefined
 }
 
-export type PartialCompilerOptions = PartialDeep<CompilerOptions | CompilerOptionOverrides>;
+export type PartialCompilerOptions = Partial<CompilerOptions> & CompilerOptionOverrides
 
 export interface ConfigOptions {
-  compilerOptions?: PartialCompilerOptions;
-  debug?: boolean;
-  out?: string;
-  tsconfigs?: string[];
-  exclude?: string[];
-  include?: string[];
-  path?: string;
-  isTesting?: boolean;
+  compilerOptions?: PartialCompilerOptions
+  debug?: boolean
+  out?: string
+  tsconfigs?: string[]
+  exclude?: string[]
+  include?: string[]
+  path?: string
+  isTesting?: boolean
 }
 export interface CompilerOption {
-  name: string;
-  value: string;
+  name: string
+  value: string
 }
 export interface Options {
-  out?: string;
-  exclude?: string[];
-  include?: string[];
-  tsconfigs?: string[];
-  path?: string;
-  debug?: boolean;
-  isTesting?: boolean;
-  isTestingCLI?: boolean;
-  [key: string]: string | boolean | string[] | undefined;
+  out?: string
+  exclude?: string[]
+  include?: string[]
+  tsconfigs?: string[]
+  path?: string
+  debug?: boolean
+  isTesting?: boolean
+  isTestingCLI?: boolean
+  [key: string]: CompilerOptions[keyof CompilerOptions] | string | boolean | string[] | undefined
 }
 
 export type LoggerParams = {
@@ -41,8 +40,9 @@ export type LoggerParams = {
 }
 
 export interface TsConfig {
-  extends?: string;
-  compilerOptions?: PartialDeep<CompilerOptions>;
-  include?: string[];
-  exclude?: string[];
+  extends?: string
+  compilerOptions?: PartialCompilerOptions
+  include?: string[]
+  exclude?: string[]
+  [key: string]: unknown
 }
