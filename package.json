@@ -37,8 +37,8 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts --clean && tsup src/program.ts --format esm --dts",
-    "clean": "node --eval \"fs.rmSync('dist', { recursive: true, force: true }); fs.rmSync('config', { recursive: true, force: true })\"",
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean && tsup src/program.ts --format esm --dts --clean",
+    "clean": "node --eval \"const fs = require('node:fs'); fs.rmSync('dist', { recursive: true, force: true }); fs.rmSync('config', { recursive: true, force: true })\"",
     "cmd:test": "tsx src/program.ts --isTestingCLI",
     "cmd:test:cli": "tsx src/program.ts 'tsconfig.json' --out 'tsconfig.test.json' --outDir 'fooboo' --debug",
     "commit": "git-cz",
