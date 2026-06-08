@@ -1,6 +1,25 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { parseArgs } from '../src/program.js'
+import { fileURLToPath } from 'node:url'
+
+const directRunMessages: string[] = []
+const originalArgv = process.argv
+const originalInfo = console.info
+const programPath = fileURLToPath(new URL('../src/program.ts', import.meta.url))
+
+process.argv = [process.execPath, programPath, 'foo.json', '--isTestingCLI']
+console.info = (...values: unknown[]) => {
+  directRunMessages.push(String(values[0]))
+}
+
+const { action, parseArgs, runCli } = await (async () => {
+  try {
+    return await import('../src/program.js')
+  } finally {
+    console.info = originalInfo
+    process.argv = originalArgv
+  }
+})()
 
 test('program w/ file', () => {
   const result = parseArgs(['foo.json', '--isTestingCLI'])
@@ -198,4 +217,73 @@ test('program w/ path option', () => {
       isTestingCLI: true,
     },
   })
+})
+
+test('program runs CLI when loaded as the direct entrypoint', () => {
+  assert.deepStrictEqual(
+    directRunMessages.map((message) => JSON.parse(message)),
+    [
+      {
+        files: ['foo.json'],
+        options: {
+          isTestingCLI: true,
+        },
+      },
+    ],
+  )
+})
+
+test('program renders help text', () => {
+  const messages: string[] = []
+  const originalConsoleInfo = console.info
+
+  console.info = (...values: unknown[]) => {
+    messages.push(String(values[0]))
+  }
+
+  try {
+    runCli(['--help'])
+  } finally {
+    console.info = originalConsoleInfo
+  }
+
+  assert.match(messages.join('\n'), /Usage: merge-tsconfigs \[options\] \[files\.\.\.\]/)
+})
+
+test('program sets an exit code for invalid CLI options', () => {
+  const messages: string[] = []
+  const originalConsoleError = console.error
+  const originalExitCode = process.exitCode
+
+  console.error = (...values: unknown[]) => {
+    messages.push(String(values[0]))
+  }
+  process.exitCode = undefined
+
+  try {
+    runCli(['--wat'])
+    assert.equal(process.exitCode, 1)
+  } finally {
+    console.error = originalConsoleError
+    process.exitCode = originalExitCode
+  }
+
+  assert.match(messages.join('\n'), /program:/)
+})
+
+test('program logs action errors', () => {
+  const messages: string[] = []
+  const originalConsoleError = console.error
+
+  console.error = (...values: unknown[]) => {
+    messages.push(String(values[0]))
+  }
+
+  try {
+    action(['./tests/cfg1.json'], { out: '\0' })
+  } finally {
+    console.error = originalConsoleError
+  }
+
+  assert.match(messages.join('\n'), /action:/)
 })
