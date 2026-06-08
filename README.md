@@ -2,8 +2,6 @@
 
 ![Typed with TypeScript](https://flat.badgen.net/badge/icon/Typed?icon=typescript&label&labelColor=blue&color=555555)
 [![npm version](https://badge.fury.io/js/merge-tsconfigs.svg)](https://badge.fury.io/js/merge-tsconfigs)
-[![unpkg](https://img.shields.io/badge/unpkg-blue.svg)](https://unpkg.com/merge-tsconfigs@0.1.1/dist/index.js)
-[![skypack](https://img.shields.io/badge/skypack-blueviolet.svg)](https://cdn.skypack.dev/merge-tsconfigs?min)
 ![ci](https://github.com/yowainwright/merge-tsconfigs/actions/workflows/ci.yml/badge.svg)
 [![Github](https://badgen.net/badge/icon/github?icon=github&label&color=grey)](https://github.com/yowainwright/merge-tsconfigs)
 ![Twitter](https://img.shields.io/twitter/url?url=https%3A%2F%2Fgithub.com%2Fyowainwright%2Fmerge-tsconfigs)
@@ -29,6 +27,7 @@ By providing an easy way to create the tsconfig you want, your everyday tsconfig
 ### _For example_
 
 By running `merge-tsconfigs ./tsconfig.build.json` you'll merge `tsconfig.json`
+
 ```ts
 {
   "compilerOptions": {
@@ -38,6 +37,7 @@ By running `merge-tsconfigs ./tsconfig.build.json` you'll merge `tsconfig.json`
 ```
 
 and, `tsconfig.build.json`
+
 ```ts
 {
   "compilerOptions": {
@@ -48,6 +48,7 @@ and, `tsconfig.build.json`
 ```
 
 into `tsconfig.merged.json`
+
 ```ts
 {
   "compilerOptions": {
@@ -66,6 +67,7 @@ Which you can now use for deployment, dockerfiles, or any other use case. And, y
 Merge-tsconfigs is built to be uses as a CLI first and foremost. It also exports node functions which can be used to preform the same merge operation.
 
 ---
+
 ### CLI API
 
 Listed below are the CLI options and arguments to execute merge-tsconfigs. To \*_view all_ cli options in your browser, run `merge-tsconfigs --help`!
@@ -199,7 +201,7 @@ merge-tsconfigs ./tsconfig.json ./tsconfig.build.json --path '{"item/*": ["foo":
 The node API works exactly the same as the CLI API.
 
 ```ts
-import mergeTsconfigs from 'merge-tsconfigs';
+import mergeTsconfigs from 'merge-tsconfigs'
 
 mergeTsconfigs({
   files: ['./tsconfig.json', './tsconfig.build.json'],
@@ -210,8 +212,7 @@ mergeTsconfigs({
     allowJs: true,
     noEmit: true,
   },
-});
-
+})
 ```
 
 You can use any compiler options provided by [Typescript](https://www.typescriptlang.org/docs/handbook/compiler-options.html). Object keys aren't currently implemented but can be upon feature request.
@@ -223,7 +224,7 @@ Merge tsconfig files into a single tsconfig
 ```ts
 const config = mergeTsconfigs({
   files: ['./tsconfig.json', './tsconfig.build.json'],
-});
+})
 // ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.merged.json
 ```
 
@@ -233,7 +234,7 @@ Merge tsconfig files into a custom output file
 const config = mergeTsconfigs({
   files: ['./tsconfig.json', './tsconfig.build.json'],
   out: './new-dir/tsconfig.out.json',
-});
+})
 // ./tsconfig.json + ./tsconfig.build.json => ./tsconfig.out.json
 ```
 
@@ -245,15 +246,6 @@ Install merge-tsconfigs with your preferred package manager.
 
 ```sh
 npm install merge-tsconfigs --save-dev
-```
-
-\*_Untested_: In, Deno, Snowpack, or other options, you can import merge-tsconfigs directly into your project.
-```ts
-import mergeTsconfigs from 'npm:merge-tsconfigs';
-// or
-import mergeTsconfigs from "https://cdn.skypack.dev/merge-tsconfigs@latest";
-// or
-import mergeTsconfigs from "https://unpkg.com/merge-tsconfigs@latest/dist/index.js";
 ```
 
 ---
