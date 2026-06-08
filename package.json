@@ -53,7 +53,7 @@
     "release": "release-it",
     "setup": "sh scripts/setup.sh",
     "setup:config": "mkdir config && cd config npx tsc --init",
-    "test": "vitest run",
+    "test": "node --import tsx --test tests/*.test.ts",
     "typecheck": "tsc --noEmit",
     "typecheck:tsgo": "tsgo --noEmit",
     "update": "codependence --update"
@@ -69,8 +69,7 @@
     "release-it": "^20.2.0",
     "tsup": "^8.5.1",
     "tsx": "^4.22.4",
-    "typescript": "^6.0.3",
-    "vitest": "^4.1.8"
+    "typescript": "^6.0.3"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,json,jsonc,yml,yaml,md}": [
@@ -78,7 +77,7 @@
     ],
     "*.{js,jsx,ts,tsx}": [
       "oxlint --fix",
-      "vitest related --run"
+      "sh -c 'pnpm run test'"
     ]
   },
   "engines": {
