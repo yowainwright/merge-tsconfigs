@@ -109,3 +109,14 @@ dist
 tsconfig.merged.json
 tsconfig.test.json
 .pnpm-store
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
+.claude/
+CLAUDE.md
+.beads/
+dist/
+build/
+.next/

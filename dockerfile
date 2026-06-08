@@ -1,9 +1,9 @@
 # syntax=docker/dockerfile:1
 
-FROM node:20-alpine
+FROM node:26-alpine
 WORKDIR /src
-COPY package.json .
-RUN npm install -g pnpm
-RUN pnpm install
+COPY package.json pnpm-lock.yaml ./
+RUN corepack enable
+RUN pnpm install --frozen-lockfile --ignore-scripts
 COPY . .
 CMD ["pnpm", "run", "build"]

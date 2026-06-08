@@ -1,7 +1,4 @@
-import scripts from './scripts'
-import program from './program'
+import scripts from './scripts.js'
 
-program;
-
-export default scripts;
-export * from './scripts';
+export default scripts
+export * from './scripts.js'

@@ -1,17 +1,19 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "target": "esnext",
-    "module": "commonjs",
-    "rootDir": "src",
+    "target": "ES2022",
+    "module": "NodeNext",
+    "rootDir": ".",
     "declaration": true,
     "outDir": "./dist",
     "strict": true,
-    "moduleResolution": "node",
+    "moduleResolution": "NodeNext",
     "esModuleInterop": true,
-    "lib": ["esnext", "dom", "es6", "dom.iterable"],
+    "lib": ["ES2022"],
     "forceConsistentCasingInFileNames": true,
     "types": ["node"],
+    "ignoreDeprecations": "6.0",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
     "noEmit": false,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
@@ -22,6 +24,6 @@
     "skipLibCheck": true,
     "sourceMap": false
   },
-  "include": ["src", "test"],
-  "exclude": ["test/*.ts", "dist"]
+  "include": ["src", "tests"],
+  "exclude": ["dist"]
 }
