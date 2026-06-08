@@ -30,6 +30,7 @@ jobs:
       - run: pnpm run update
       - run: pnpm install --no-frozen-lockfile
       - run: pnpm typecheck
+      - run: pnpm typecheck:tsgo
       - run: pnpm format:check
       - run: pnpm build
       - run: pnpm lint

@@ -58,6 +58,7 @@ jobs:
 
       - run: bun install
       - run: bun run typecheck
+      - run: bun run typecheck:tsgo
       - run: bun run format:check
       - run: bun run build
       - run: bun run lint
