@@ -29,6 +29,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm run update
       - run: pnpm install --no-frozen-lockfile
+      - name: Verify dependency update policy
+        run: pnpm run deps:check
       - run: pnpm typecheck
       - run: pnpm typecheck:tsgo
       - run: pnpm format:check

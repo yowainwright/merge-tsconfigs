@@ -1,4 +1,11 @@
 {
+  "files": [
+    "package.json"
+  ],
+  "ignore": [
+    "**/node_modules/**",
+    "tests/**"
+  ],
   "codependencies": [
     "@types/node",
     "@typescript/native-preview",
@@ -10,7 +17,6 @@
     "release-it",
     "tsup",
     "tsx",
-    "typescript",
-    "vitest"
+    "typescript"
   ]
 }
