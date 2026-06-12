@@ -9,11 +9,12 @@
     "tsconfig-merge",
     "typescript"
   ],
+  "homepage": "https://github.com/yowainwright/merge-tsconfigs#readme",
   "bugs": {
     "url": "https://github.com/yowainwright/merge-tsconfigs/issues"
   },
   "license": "MIT",
-  "author": "Jeff Wainwright <https:jeffry.in> (yowainwright@gmail.com)",
+  "author": "Jeff Wainwright <yowainwright@gmail.com> (https://jeffry.in)",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yowainwright/merge-tsconfigs.git"
@@ -22,9 +23,12 @@
     "merge-tsconfigs": "./dist/program.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "LICENSE",
+    "README.md"
   ],
   "type": "module",
+  "sideEffects": false,
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -33,11 +37,16 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    }
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --dts --clean && tsup src/program.ts --format esm --dts --clean",
+    "build": "tsup src/index.ts --format esm,cjs --dts --clean && tsup src/program.ts --format esm --dts",
     "clean": "node --eval \"const fs = require('node:fs'); fs.rmSync('dist', { recursive: true, force: true }); fs.rmSync('config', { recursive: true, force: true })\"",
     "cmd:test": "tsx src/program.ts --isTestingCLI",
     "cmd:test:cli": "tsx src/program.ts 'tsconfig.json' --out 'tsconfig.test.json' --outDir 'fooboo' --debug",
@@ -49,16 +58,33 @@
     "format:check": "oxfmt --check src tests package.json tsconfig.json .codependencerc .oxlintrc.json .oxfmtrc.json .github/workflows",
     "lint": "oxlint src tests",
     "lint-fix": "oxlint src tests --fix",
+    "pack:check": "pnpm build && CI=true pnpm pack --json --pack-destination ./.npm-cache",
     "pre-commit": "lint-staged",
+    "prepack": "pnpm build",
     "prepare": "sh scripts/setup.sh",
-    "prepublishOnly": "pnpm run typecheck && pnpm run format:check && pnpm run lint && pnpm run test && pnpm run build",
+    "prepublishOnly": "pnpm validate",
     "release": "release-it",
+    "release:current": "release-it --no-increment --ci",
+    "release:current:dry": "release-it --no-increment --dry-run",
+    "release:patch": "release-it patch --ci",
+    "release:patch:dry": "release-it patch --dry-run",
+    "release:minor": "release-it minor --ci",
+    "release:minor:dry": "release-it minor --dry-run",
+    "release:major": "release-it major --ci",
+    "release:major:dry": "release-it major --dry-run",
+    "release:beta": "release-it prepatch --preRelease=beta --ci",
+    "release:beta:dry": "release-it prepatch --preRelease=beta --dry-run",
+    "release:alpha": "release-it prepatch --preRelease=alpha --ci",
+    "release:alpha:dry": "release-it prepatch --preRelease=alpha --dry-run",
+    "release:dry": "release-it --dry-run",
     "setup": "sh scripts/setup.sh",
     "setup:config": "mkdir config && cd config npx tsc --init",
     "test": "node --import tsx --test tests/*.test.ts",
+    "test:coverage": "mkdir -p coverage && node --import tsx --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov.info tests/*.test.ts",
     "typecheck": "tsc --noEmit",
     "typecheck:tsgo": "tsgo --noEmit",
-    "update": "pnpm run deps:update"
+    "update": "pnpm run deps:update",
+    "validate": "pnpm typecheck && pnpm typecheck:tsgo && pnpm format:check && pnpm build && pnpm lint && pnpm test && pnpm pack:check"
   },
   "devDependencies": {
     "@types/node": "^25.9.3",
@@ -87,8 +113,30 @@
   },
   "packageManager": "pnpm@10.12.1",
   "release-it": {
+    "$schema": "https://unpkg.com/release-it@20/schema/release-it.json",
+    "hooks": {
+      "before:init": "pnpm validate"
+    },
     "git": {
-      "commitMessage": "chore: release v$npm_package_version"
+      "requireBranch": "main",
+      "requireCleanWorkingDir": true,
+      "requireUpstream": true,
+      "commitMessage": "chore(release): ${version}",
+      "commitArgs": [
+        "--no-verify"
+      ],
+      "tagName": "v${version}",
+      "tagAnnotation": "Release ${version}",
+      "push": true,
+      "pushArgs": [
+        "--follow-tags"
+      ]
+    },
+    "github": {
+      "release": false
+    },
+    "npm": {
+      "publish": false
     }
   }
 }

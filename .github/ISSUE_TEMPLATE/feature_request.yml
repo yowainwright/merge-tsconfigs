@@ -1,0 +1,27 @@
+name: Feature Request
+description: Propose a CLI option, merge behavior, or Node API change.
+title: "feat: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What tsconfig workflow or merge behavior should this improve?
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Example
+      description: Show the input configs, command/API call, and expected output.
+      render: sh
+    validations:
+      required: true
+  - type: textarea
+    id: options
+    attributes:
+      label: Options
+      description: Describe any CLI flags, API options, defaults, or compatibility concerns.
+    validations:
+      required: false

@@ -1,11 +1,13 @@
-## Fixes
+## Summary
 
-- Fixes #
+-
 
-## Proposed Changes
+## Validation
 
-- Change
+-
 
----
+## Checklist
 
-> Read about referenced issues [here](https://help.github.com/articles/closing-issues-using-keywords/). Replace words with this Pull Request's context.
+- [ ] Tests or fixtures cover the changed behavior.
+- [ ] Documentation is updated when CLI behavior, Node API behavior, or release behavior changes.
+- [ ] `pnpm validate` passes locally or the reason it was not run is noted.

@@ -1,0 +1,36 @@
+name: Bug Report
+description: Report incorrect merge behavior, CLI crashes, or packaging problems.
+title: "bug: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened, and what did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Provide the smallest tsconfig files, command, and output that reproduce the issue.
+      render: sh
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: Tsconfig Input
+      description: Paste the relevant tsconfig input files or Node API options.
+      render: json
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      description: Include merge-tsconfigs, Node, pnpm, Bun, and TypeScript if relevant.
+      placeholder: merge-tsconfigs 0.2.2, Node 24.x, pnpm 10.x, TypeScript 6.x
+    validations:
+      required: true
