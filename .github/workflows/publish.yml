@@ -49,7 +49,7 @@ jobs:
         id: pack
         run: |
           pnpm pack --json --pack-destination ./.npm-cache > npm-pack.json
-          TARBALL="$(node scripts/read-pack-tarball.mjs npm-pack.json)"
+          TARBALL="$(node --import tsx scripts/read-pack-tarball.ts npm-pack.json)"
           test -n "$TARBALL"
           echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
       - name: Attest npm tarball

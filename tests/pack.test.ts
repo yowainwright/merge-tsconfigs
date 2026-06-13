@@ -4,6 +4,7 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
+import { readPackTarball } from '../scripts/read-pack-tarball.js'
 
 test('read-pack-tarball handles colored build logs before pnpm pack json', () => {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'merge-tsconfigs-pack-'))
@@ -18,7 +19,10 @@ test('read-pack-tarball handles colored build logs before pnpm pack json', () =>
     ].join('\n'),
   )
 
-  const tarball = execFileSync(process.execPath, ['scripts/read-pack-tarball.mjs', packOutput], {
+  const output = fs.readFileSync(packOutput, 'utf8')
+  assert.equal(readPackTarball(output), '.npm-cache/merge-tsconfigs-0.2.3.tgz')
+
+  const tarball = execFileSync(process.execPath, ['--import', 'tsx', 'scripts/read-pack-tarball.ts', packOutput], {
     encoding: 'utf8',
   }).trim()
 

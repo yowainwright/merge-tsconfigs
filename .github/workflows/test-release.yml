@@ -44,8 +44,10 @@ jobs:
           bun-version: latest
 
       - name: Enable pnpm
-        if: matrix.package-manager == 'pnpm'
         run: corepack enable
+
+      - name: Install workflow dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Determine version to test
         id: version
@@ -76,7 +78,7 @@ jobs:
       - name: Smoke test published package
         env:
           VERSION: ${{ steps.version.outputs.version }}
-        run: node scripts/smoke-package.mjs "merge-tsconfigs@$VERSION" --manager "${{ matrix.package-manager }}"
+        run: node --import tsx scripts/smoke-package.ts "merge-tsconfigs@$VERSION" --manager "${{ matrix.package-manager }}"
 
       - name: Report test result
         run: |
