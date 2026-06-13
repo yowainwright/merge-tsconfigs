@@ -20,15 +20,31 @@ env:
 jobs:
   test-published-release:
     runs-on: ubuntu-latest
-    name: pnpm smoke
+    name: ${{ matrix.package-manager }} smoke
+    strategy:
+      fail-fast: false
+      matrix:
+        package-manager: [npm, pnpm, bun]
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
       - name: Setup Node.js
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: 26
 
+      - name: Setup Bun
+        if: matrix.package-manager == 'bun'
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: latest
+
       - name: Enable pnpm
+        if: matrix.package-manager == 'pnpm'
         run: corepack enable
 
       - name: Determine version to test
@@ -37,7 +53,7 @@ jobs:
           if [ -n "${{ inputs.version }}" ]; then
             VERSION="${{ inputs.version }}"
           else
-            VERSION="$(pnpm view merge-tsconfigs version)"
+            VERSION="$(npm view merge-tsconfigs version)"
           fi
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "Testing merge-tsconfigs@$VERSION"
@@ -47,7 +63,7 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
           echo "Waiting for merge-tsconfigs@$VERSION to be available on npm..."
           for attempt in {1..30}; do
-            if pnpm view "merge-tsconfigs@$VERSION" version >/dev/null 2>&1; then
+            if npm view "merge-tsconfigs@$VERSION" version >/dev/null 2>&1; then
               echo "merge-tsconfigs@$VERSION is available on npm"
               exit 0
             fi
@@ -57,85 +73,13 @@ jobs:
           echo "merge-tsconfigs@$VERSION was not available on npm in time"
           exit 1
 
-      - name: Install published package
+      - name: Smoke test published package
         env:
           VERSION: ${{ steps.version.outputs.version }}
-        run: |
-          mkdir release-smoke
-          cd release-smoke
-          printf '{"private":true,"type":"module"}\n' > package.json
-          pnpm add -D "merge-tsconfigs@$VERSION" typescript
-
-      - name: Verify library imports
-        run: |
-          cd release-smoke
-          node --input-type=module <<'EOF'
-          import mergeTsConfigs from "merge-tsconfigs";
-          import * as mergeTsconfigs from "merge-tsconfigs";
-
-          if (typeof mergeTsConfigs !== "function") {
-            throw new Error("Default ESM export is not a function");
-          }
-
-          if (typeof mergeTsconfigs.mergeTsConfigs !== "function") {
-            throw new Error("Named ESM export mergeTsConfigs is not a function");
-          }
-          EOF
-
-          node --input-type=commonjs <<'EOF'
-          const mergeTsConfigs = require("merge-tsconfigs");
-
-          if (typeof mergeTsConfigs.default !== "function") {
-            throw new Error("Default CJS export is not a function");
-          }
-
-          if (typeof mergeTsConfigs.mergeTsConfigs !== "function") {
-            throw new Error("Named CJS export mergeTsConfigs is not a function");
-          }
-          EOF
-
-      - name: Verify CLI merge
-        run: |
-          cd release-smoke
-          cat > tsconfig.base.json <<'EOF'
-          {
-            "compilerOptions": {
-              "strict": true
-            },
-            "include": ["src"]
-          }
-          EOF
-          cat > tsconfig.build.json <<'EOF'
-          {
-            "extends": "./tsconfig.base.json",
-            "compilerOptions": {
-              "module": "NodeNext"
-            },
-            "exclude": ["dist"]
-          }
-          EOF
-
-          pnpm exec merge-tsconfigs tsconfig.build.json --out tsconfig.merged.json
-          node --input-type=module <<'EOF'
-          import fs from "node:fs";
-
-          const merged = JSON.parse(fs.readFileSync("tsconfig.merged.json", "utf8"));
-          if (merged.compilerOptions.strict !== true) {
-            throw new Error("Expected strict option from extended config");
-          }
-          if (merged.compilerOptions.module !== "NodeNext") {
-            throw new Error("Expected module option from build config");
-          }
-          if (!merged.include.includes("src")) {
-            throw new Error("Expected include from extended config");
-          }
-          if (!merged.exclude.includes("dist")) {
-            throw new Error("Expected exclude from build config");
-          }
-          EOF
+        run: node scripts/smoke-package.mjs "merge-tsconfigs@$VERSION" --manager "${{ matrix.package-manager }}"
 
       - name: Report test result
         run: |
           echo "Tested merge-tsconfigs@${{ steps.version.outputs.version }}"
-          echo "Package manager: pnpm"
+          echo "Package manager: ${{ matrix.package-manager }}"
           echo "Library import and CLI smoke tests passed"

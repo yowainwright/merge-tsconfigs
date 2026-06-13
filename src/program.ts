@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { realpathSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { compilerOptions } from './config.js'
@@ -232,9 +233,17 @@ export function runCli(argv = process.argv.slice(2)): void {
   }
 }
 
-function isDirectRun(): boolean {
+function resolveRealPath(path: string): string {
+  try {
+    return realpathSync(path)
+  } catch {
+    return path
+  }
+}
+
+export function isDirectRun(): boolean {
   if (!process.argv[1]) return false
-  return fileURLToPath(import.meta.url) === resolve(process.argv[1])
+  return resolveRealPath(fileURLToPath(import.meta.url)) === resolveRealPath(resolve(process.argv[1]))
 }
 
 if (isDirectRun()) runCli()

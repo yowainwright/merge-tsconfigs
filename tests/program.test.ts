@@ -1,4 +1,7 @@
 import assert from 'node:assert/strict'
+import { mkdtempSync, rmSync, symlinkSync } from 'node:fs'
+import os from 'node:os'
+import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
@@ -12,7 +15,7 @@ console.info = (...values: unknown[]) => {
   directRunMessages.push(String(values[0]))
 }
 
-const { action, parseArgs, runCli } = await (async () => {
+const { action, isDirectRun, parseArgs, runCli } = await (async () => {
   try {
     return await import('../src/program.js')
   } finally {
@@ -20,6 +23,22 @@ const { action, parseArgs, runCli } = await (async () => {
     process.argv = originalArgv
   }
 })()
+
+test('program treats symlinked bins as direct entrypoints', () => {
+  const directory = mkdtempSync(path.join(os.tmpdir(), 'merge-tsconfigs-bin-'))
+  const binPath = path.join(directory, 'merge-tsconfigs')
+  const originalSymlinkArgv = process.argv
+
+  try {
+    symlinkSync(programPath, binPath)
+    process.argv = [process.execPath, binPath]
+
+    assert.equal(isDirectRun(), true)
+  } finally {
+    process.argv = originalSymlinkArgv
+    rmSync(directory, { force: true, recursive: true })
+  }
+})
 
 test('program w/ file', () => {
   const result = parseArgs(['foo.json', '--isTestingCLI'])
