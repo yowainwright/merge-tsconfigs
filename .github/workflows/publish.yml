@@ -1,0 +1,106 @@
+name: publish
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: read
+
+env:
+  SOCKET_API_KEY: ${{ secrets.SOCKET_SECURITY_API_KEY || secrets.SOCKET_TOKEN }}
+  SOCKET_SECURITY_API_KEY: ${{ secrets.SOCKET_SECURITY_API_KEY || secrets.SOCKET_TOKEN }}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: npm-publish
+    permissions:
+      id-token: write
+      contents: write
+      attestations: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - name: Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 26
+          registry-url: https://registry.npmjs.org
+      - name: Enable pnpm
+        run: corepack enable
+      - name: Use npm with OIDC support
+        run: npm install -g npm@11.15.0
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm validate
+      - name: Resolve npm dist-tag
+        id: dist-tag
+        run: |
+          VERSION="${{ github.ref_name }}"
+          if [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
+            echo "tag=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Pack npm tarball
+        id: pack
+        run: |
+          pnpm pack --json --pack-destination ./.npm-cache > npm-pack.json
+          TARBALL="$(node -e "const fs = require('node:fs'); const text = fs.readFileSync('npm-pack.json', 'utf8'); const objectStart = text.indexOf('{'); const arrayStart = text.indexOf('['); const starts = [objectStart, arrayStart].filter((index) => index >= 0); const start = Math.min(...starts); if (!Number.isFinite(start)) throw new Error('pack JSON output not found'); const parsed = JSON.parse(text.slice(start)); const pkg = Array.isArray(parsed) ? parsed[0] : parsed; console.log(pkg.filename)")"
+          test -n "$TARBALL"
+          echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
+      - name: Attest npm tarball
+        id: attest
+        uses: actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 # v4
+        with:
+          subject-path: ${{ steps.pack.outputs.tarball }}
+      - name: Prepare release attestation
+        id: release-attestation
+        run: |
+          SIGSTORE_BUNDLE="${{ steps.pack.outputs.tarball }}.sigstore.json"
+          cp "${{ steps.attest.outputs.bundle-path }}" "$SIGSTORE_BUNDLE"
+          echo "sigstore_bundle=$SIGSTORE_BUNDLE" >> "$GITHUB_OUTPUT"
+      - name: Publish npm package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN || secrets.NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: ${{ secrets.NPM_CONFIG_PROVENANCE || 'true' }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          PACKAGE_NAME: merge-tsconfigs
+          PACKAGE_VERSION: ${{ github.ref_name }}
+        run: |
+          VERSION="${PACKAGE_VERSION#v}"
+          if npm view "$PACKAGE_NAME@$VERSION" version > /dev/null 2>&1; then
+            echo "$PACKAGE_NAME@$VERSION is already published"
+            exit 0
+          fi
+
+          AUTH_TOKEN="${NODE_AUTH_TOKEN:-$NPM_TOKEN}"
+          if [ -n "$AUTH_TOKEN" ]; then
+            npm config set //registry.npmjs.org/:_authToken "$AUTH_TOKEN"
+          fi
+
+          npm publish "${{ steps.pack.outputs.tarball }}" --access public --tag "${{ steps.dist-tag.outputs.tag }}"
+      - name: Publish GitHub release assets
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SIGSTORE_BUNDLE: ${{ steps.release-attestation.outputs.sigstore_bundle }}
+          TARBALL: ${{ steps.pack.outputs.tarball }}
+          VERSION: ${{ github.ref_name }}
+        run: |
+          RELEASE_ARGS=()
+          if [[ "$VERSION" =~ -(alpha|beta|rc) ]]; then
+            RELEASE_ARGS+=(--prerelease)
+          fi
+
+          if gh release view "$VERSION" > /dev/null 2>&1; then
+            gh release upload "$VERSION" "$TARBALL" "$SIGSTORE_BUNDLE" --clobber
+            exit 0
+          fi
+
+          gh release create "$VERSION" "$TARBALL" "$SIGSTORE_BUNDLE" \
+            --title "$VERSION" \
+            --generate-notes \
+            "${RELEASE_ARGS[@]}"
