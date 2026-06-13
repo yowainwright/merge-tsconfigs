@@ -78,7 +78,7 @@ jobs:
       - name: Smoke test published package
         env:
           VERSION: ${{ steps.version.outputs.version }}
-        run: node --import tsx scripts/smoke-package.ts "merge-tsconfigs@$VERSION" --manager "${{ matrix.package-manager }}"
+        run: node --import tsx scripts/package.ts smoke-package "merge-tsconfigs@$VERSION" --manager "${{ matrix.package-manager }}"
 
       - name: Report test result
         run: |

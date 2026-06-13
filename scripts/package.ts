@@ -5,7 +5,18 @@ import fs from 'node:fs'
 import os from 'node:os'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
-import { readPackTarball } from './read-pack-tarball.js'
+
+type PackageCommand = 'read-pack-tarball' | 'smoke-package'
+
+type StripAnsiState = {
+  inAnsiSequence: boolean
+  output: string
+  skipCharacter: boolean
+}
+
+type PackedPackage = {
+  filename: string
+}
 
 export type PackageManager = 'bun' | 'npm' | 'pnpm'
 
@@ -38,8 +49,33 @@ export type SmokePackageDependencies = {
 }
 
 const packageName = 'merge-tsconfigs'
+const packageCommands = new Set<string>(['read-pack-tarball', 'smoke-package'])
 const defaultManagers: PackageManager[] = ['npm', 'pnpm', 'bun']
 const supportedManagers = new Set<string>(defaultManagers)
+const escapeCharacter = String.fromCharCode(27)
+const controlSequenceIntroducer = String.fromCharCode(155)
+const ansiFinalCodeMinimum = 0x40
+const ansiFinalCodeMaximum = 0x7e
+
+const isPackageCommand = (value: string | undefined): value is PackageCommand =>
+  value !== undefined && packageCommands.has(value)
+
+const readPackageCommand = (value: string | undefined): PackageCommand => {
+  if (!isPackageCommand(value)) {
+    throw new Error(`Unknown package command: ${value ?? ''}`)
+  }
+
+  return value
+}
+
+const isAnsiFinalCharacter = (character: string): boolean => {
+  const code = character.charCodeAt(0)
+
+  return code >= ansiFinalCodeMinimum && code <= ansiFinalCodeMaximum
+}
+
+const isPackedPackage = (value: unknown): value is PackedPackage =>
+  typeof value === 'object' && value !== null && 'filename' in value && typeof value.filename === 'string'
 
 const isPackageManager = (value: string | undefined): value is PackageManager =>
   value !== undefined && supportedManagers.has(value)
@@ -60,6 +96,69 @@ const addManager = (state: ParseState, manager: PackageManager): ParseState => (
     managers: state.managerWasSet ? [...state.options.managers, manager] : [manager],
   },
 })
+
+export const stripAnsi = (value: string): string => {
+  const characters = Array.from(value)
+
+  return characters.reduce<StripAnsiState>(
+    (state, character, index) => {
+      if (state.skipCharacter) {
+        return { ...state, skipCharacter: false }
+      }
+
+      if (state.inAnsiSequence) {
+        return { ...state, inAnsiSequence: !isAnsiFinalCharacter(character) }
+      }
+
+      if (character === escapeCharacter && characters[index + 1] === '[') {
+        return { ...state, inAnsiSequence: true, skipCharacter: true }
+      }
+
+      if (character === controlSequenceIntroducer) {
+        return { ...state, inAnsiSequence: true }
+      }
+
+      return { ...state, output: `${state.output}${character}` }
+    },
+    { inAnsiSequence: false, output: '', skipCharacter: false },
+  ).output
+}
+
+export const findJsonStartIndexes = (text: string): number[] =>
+  Array.from(text)
+    .map((character, index) => ({ character, index }))
+    .filter(({ character }) => character === '[' || character === '{')
+    .map(({ index }) => index)
+
+export const findPackTarballInJson = (parsed: unknown): string | undefined => {
+  const packages = Array.isArray(parsed) ? parsed : [parsed]
+
+  return packages.find(isPackedPackage)?.filename
+}
+
+export const readPackTarballCandidate = (candidate: string): string | undefined => {
+  try {
+    return findPackTarballInJson(JSON.parse(candidate))
+  } catch {
+    return undefined
+  }
+}
+
+export const readPackTarball = (output: string): string => {
+  const text = stripAnsi(output)
+  const tarball = findJsonStartIndexes(text).reduceRight<string | undefined>(
+    (found, start) => found ?? readPackTarballCandidate(text.slice(start).trim()),
+    undefined,
+  )
+
+  if (!tarball) {
+    throw new Error('pack JSON output not found')
+  }
+
+  return tarball
+}
+
+export const readPackTarballFile = (filePath: string): string => readPackTarball(fs.readFileSync(filePath, 'utf8'))
 
 export const parseSmokePackageArgs = (argv: string[]): SmokePackageOptions =>
   argv.reduce<ParseState>(
@@ -143,7 +242,7 @@ export const packPackage = (run: RunCommand = runCommand): string => {
 export const resolvePackageSpec = (packageSpec: string | undefined): string => {
   if (!packageSpec) {
     throw new Error(
-      'usage: node --import tsx scripts/smoke-package.ts [--pack] [--manager <npm|pnpm|bun>] [package-spec]',
+      'usage: node --import tsx scripts/package.ts smoke-package [--pack] [--manager <npm|pnpm|bun>] [package-spec]',
     )
   }
 
@@ -298,7 +397,17 @@ export const smokePackage = (
   }
 }
 
-export const main = (argv = process.argv.slice(2), dependencies: SmokePackageDependencies = {}): void => {
+export const runReadPackTarballCommand = (argv: string[], info: (message: string) => void = console.log): void => {
+  const filePath = argv[0]
+
+  if (!filePath) {
+    throw new Error('usage: node --import tsx scripts/package.ts read-pack-tarball <npm-pack-json-file>')
+  }
+
+  info(readPackTarballFile(filePath))
+}
+
+export const runSmokePackageCommand = (argv: string[], dependencies: SmokePackageDependencies = {}): void => {
   const options = parseSmokePackageArgs(argv)
   const run = dependencies.runCommand ?? runCommand
   const packageSpec = resolvePackageSpec(options.pack ? packPackage(run) : options.packageSpec)
@@ -306,6 +415,17 @@ export const main = (argv = process.argv.slice(2), dependencies: SmokePackageDep
   options.managers.forEach((manager) =>
     smokePackage(manager, packageSpec, { ...dependencies, keep: options.keep, runCommand: run }),
   )
+}
+
+export const main = (argv = process.argv.slice(2), dependencies: SmokePackageDependencies = {}): void => {
+  const [command, ...args] = argv
+
+  if (readPackageCommand(command) === 'read-pack-tarball') {
+    runReadPackTarballCommand(args)
+    return
+  }
+
+  runSmokePackageCommand(args, dependencies)
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

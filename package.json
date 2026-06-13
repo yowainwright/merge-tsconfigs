@@ -79,7 +79,7 @@
     "release:dry": "release-it --dry-run",
     "setup": "sh scripts/setup.sh",
     "setup:config": "mkdir config && cd config npx tsc --init",
-    "smoke:package": "node --import tsx scripts/smoke-package.ts --pack",
+    "smoke:package": "node --import tsx scripts/package.ts smoke-package --pack",
     "test": "node --import tsx --test tests/*.test.ts",
     "test:coverage": "mkdir -p coverage && node --import tsx --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=coverage/lcov.info tests/*.test.ts",
     "typecheck": "tsc --noEmit",

@@ -6,13 +6,15 @@ import { test } from 'node:test'
 import {
   getCliCommand,
   getInstallCommand,
+  main,
   packPackage,
   parseSmokePackageArgs,
   resolvePackageSpec,
+  runReadPackTarballCommand,
   smokePackage,
   verifyMergedTsconfig,
   type RunCommand,
-} from '../scripts/smoke-package.js'
+} from '../scripts/package.js'
 
 const packOutputRun: RunCommand = () =>
   [
@@ -61,6 +63,21 @@ test('parseSmokePackageArgs rejects unsupported package managers', () => {
 
 test('packPackage reads tarball path from pnpm pack output', () => {
   assert.equal(packPackage(packOutputRun), '.npm-cache/merge-tsconfigs-0.2.4.tgz')
+})
+
+test('runReadPackTarballCommand prints the tarball path', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'merge-tsconfigs-pack-command-'))
+  const packOutput = path.join(directory, 'npm-pack.json')
+  const messages: string[] = []
+
+  try {
+    fs.writeFileSync(packOutput, packOutputRun('', []))
+    runReadPackTarballCommand([packOutput], (message) => messages.push(message))
+
+    assert.deepStrictEqual(messages, ['.npm-cache/merge-tsconfigs-0.2.4.tgz'])
+  } finally {
+    fs.rmSync(directory, { force: true, recursive: true })
+  }
 })
 
 test('resolvePackageSpec resolves local tarballs but leaves published specs alone', () => {
@@ -124,6 +141,38 @@ test('smokePackage installs, checks imports, and verifies CLI output', () => {
 
   try {
     smokePackage('npm', 'merge-tsconfigs@1.2.3', {
+      info: () => undefined,
+      makeTempDirectory: () => directory,
+      removeDirectory: () => undefined,
+      runCommand: run,
+    })
+
+    assert.deepStrictEqual(commands, [
+      'npm install --save-dev merge-tsconfigs@1.2.3',
+      'node verify-esm.mjs',
+      'node verify-cjs.cjs',
+      `${path.join('node_modules', '.bin', 'merge-tsconfigs')} tsconfig.build.json --out tsconfig.merged.json`,
+    ])
+  } finally {
+    fs.rmSync(directory, { force: true, recursive: true })
+  }
+})
+
+test('main dispatches the smoke-package command', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'merge-tsconfigs-main-'))
+  const commands: string[] = []
+  const run: RunCommand = (command, args, options = {}) => {
+    commands.push([command, ...args].join(' '))
+
+    if (command.endsWith(path.join('node_modules', '.bin', 'merge-tsconfigs'))) {
+      writeMergedTsconfig(options.cwd ?? directory)
+    }
+
+    return ''
+  }
+
+  try {
+    main(['smoke-package', 'merge-tsconfigs@1.2.3', '--manager', 'npm'], {
       info: () => undefined,
       makeTempDirectory: () => directory,
       removeDirectory: () => undefined,
